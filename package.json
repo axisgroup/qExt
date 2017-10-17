@@ -1,0 +1,19 @@
+{
+  "name": "qext",
+  "version": "0.1.1",
+  "description": "README",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jabellizzi/qExt.git"
+  },
+  "author": "John Bellizzi",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/jabellizzi/qExt/issues"
+  },
+  "homepage": "https://github.com/jabellizzi/qExt#readme"
+}
