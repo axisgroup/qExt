@@ -7,7 +7,7 @@
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "bin": {
-    "dosomething": "./bin/demo-global.js"
+    "create-qext": "./bin/demo-global.js"
   },
   "repository": {
     "type": "git",
