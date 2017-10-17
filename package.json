@@ -2,14 +2,18 @@
   "name": "qext",
   "version": "0.1.1",
   "description": "README",
-  "main": "index.js",
+  "main": "./lib/index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "bin": {
+    "dosomething": "./bin/demo-global.js"
   },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/jabellizzi/qExt.git"
   },
+  "preferGlobal": true,
   "author": "John Bellizzi",
   "license": "ISC",
   "bugs": {
