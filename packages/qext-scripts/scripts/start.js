@@ -72,10 +72,9 @@ function BundleObservable(extensionName) {
     });
 
 
-    compiler.run((err, stats) => {
+    compiler.watch({}, (err, stats) => {
       console.log('[webpack:build]', stats.toString({ colors: true }));
       observer.next(extensionName);
-      observer.complete();
     })
   })
 }

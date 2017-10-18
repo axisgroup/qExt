@@ -1,0 +1,12 @@
+{
+  "host": "jbellizzi.dev",
+  "isSecure": false,
+  "prefix": "hdr",
+  "headers": {
+    "hdr-usr": "win-0tss6c5nd86\\administrator",
+    "cache-control": "no-cache"
+  },
+  "addParams": {
+    "withCredentials": false
+  }
+}
