@@ -2,12 +2,12 @@
   "name": "qext",
   "version": "0.1.4",
   "description": "README",
-  "main": "./lib/index.js",
+  "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "bin": {
-    "create-qext": "./bin/demo-global.js"
+    "create-qext": "./bin/create-qext.js"
   },
   "repository": {
     "type": "git",
@@ -19,5 +19,6 @@
   "bugs": {
     "url": "https://github.com/jabellizzi/qExt/issues"
   },
-  "homepage": "https://github.com/jabellizzi/qExt#readme"
+  "homepage": "https://github.com/jabellizzi/qExt#readme",
+  "devDependencies": {}
 }
