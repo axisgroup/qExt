@@ -1,6 +1,6 @@
 {
   "name": "qext-scripts",
-  "version": "0.1.10",
+  "version": "0.2.1",
   "description": "",
   "main": "index.js",
   "bin": {
@@ -17,15 +17,18 @@
     "babel-loader": "^7.1.2",
     "babel-preset-env": "^1.6.1",
     "css-loader": "^0.28.7",
-    "fs-extra": "^4.0.2",
+    "fs-extra": "^4.0.3",
     "html-loader": "^0.5.1",
     "json-loader": "^0.5.7",
     "node-sass": "^4.5.3",
-    "rxjs": "^5.4.3",
+    "rxjs": "^5.5.6",
     "rxq": "^0.6.7",
     "sass-loader": "^6.0.6",
     "style-loader": "^0.19.0",
     "webpack": "^3.8.1",
     "zip-dir": "^1.0.2"
+  },
+  "devDependencies": {
+    "commander": "^2.12.2"
   }
 }

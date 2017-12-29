@@ -2,20 +2,21 @@
 
 'use strict';
 
-const path = require('path');
-const childProcess = require('child_process');
+var childProcess = require('child_process');
+var program = require('commander');
+var path = require('path');
 
-const args = process.argv.slice(2);
-const script = args[0];
+var Build = require(path.resolve(__dirname, '../scripts/build.js'));
+var Deploy = require(path.resolve(__dirname, '../scripts/deploy.js'));
+var Watch = require(path.resolve(__dirname, '../scripts/watch.js'));
 
-switch(script) {
-  case 'build':
-  case 'deploy':
-  case 'start': {
-    childProcess.fork(path.resolve(__dirname, `../scripts/${script}.js`))
-    break;
-  }
-  default: 
-    console.log('Unknown script ' +script);
-    break;
-}
+program
+  .version('0.2.0')
+  .option('-b, --bundle', 'Bundle')
+  .option('-d, --deploy', 'Deploy')
+  .option('-w, --watch', 'Watch')
+  .parse(process.argv);
+
+if(program.bundle) Build();
+else if(program.deploy) Deploy();
+else if(program.watch) Watch();
