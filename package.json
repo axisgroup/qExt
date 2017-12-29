@@ -7,7 +7,7 @@
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "bin": {
-    "create-qext": "./bin/create-qext.js"
+    "qext": "./bin/qext.js"
   },
   "repository": {
     "type": "git",
@@ -20,5 +20,8 @@
     "url": "https://github.com/jabellizzi/qExt/issues"
   },
   "homepage": "https://github.com/jabellizzi/qExt#readme",
-  "devDependencies": {}
+  "devDependencies": {},
+  "dependencies": {
+    "commander": "^2.12.2",
+    "fs-extra": "^5.0.0"}
 }

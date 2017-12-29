@@ -1,5 +1,9 @@
 # dependencies
 node_modules/
 
+# distribution
+*.tgz
+
 # misc
 .DS_Store
+Test Extension/
