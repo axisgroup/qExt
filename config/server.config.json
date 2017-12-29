@@ -1,0 +1,12 @@
+{
+  "host": "jb.dev",
+  "isSecure": false,
+  "prefix": "hdr",
+  "headers": {
+    "hdr-usr": "win-ld85r7nqndl\\administrator",
+    "cache-control": "no-cache"
+  },
+  "addParams": {
+    "withCredentials": false
+  }
+}
