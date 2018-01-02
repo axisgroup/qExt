@@ -1,9 +1,0 @@
-{
-  "name": "new-extension",
-  "version": "0.1.0",
-  "scripts": {
-    "build-extension": "qext-scripts -b",
-    "deploy-extension": "qext-scripts -d",
-    "start": "qext-scripts -w"
-  }
-}

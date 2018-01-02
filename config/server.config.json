@@ -1,9 +1,9 @@
 {
-  "host": "jb.dev",
+  "host": "hostname",
   "isSecure": false,
   "prefix": "hdr",
   "headers": {
-    "hdr-usr": "win-ld85r7nqndl\\administrator",
+    "hdr-usr": "domain\\username",
     "cache-control": "no-cache"
   },
   "addParams": {

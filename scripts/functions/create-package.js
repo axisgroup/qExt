@@ -16,9 +16,16 @@ module.exports = function(extensionName) {
     name: extensionName,
     version: '0.1.0',
     scripts: {
-      "build-extension": "qext-scripts -b",
-      "deploy-extension": "qext-scripts -d",
-      "start": "qext-scripts -w"
+      "build": "qext-scripts -b",
+      "watch": "qext-scripts -w",
+      "deploy": "qext-scripts -d",
+      "build-deploy": "qext-scripts -b -d",
+      "watch-deploy": "qext-scripts -w -d",
+      "build-source": "qext-scripts -B",
+      "watch-source": "qext-scripts -W",
+      "build-deploy-source": "qext-scripts -B -d",
+      "watch-deploy-source": "qext-scripts -W -d",
+      "start": "qext-scripts -w -d"
     },
     devDependencies: {
       "qext-scripts": "0.x"

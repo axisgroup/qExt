@@ -16,8 +16,12 @@ program
   .parse(process.argv);
 
 
-var extensionName = typeof(program.createExtension) === 'boolean' ? 'new-extension' : program.createExtension;
+if(program.createExtension) {
+  if(typeof(program.createExtension) === 'boolean') console.log('Provide a name for your extension');
+  else {
+    CreateExtension(program.createExtension);
 
-if(program.createExtension) CreateExtension(extensionName);
+    if(program.install) InstallDependencies(program.createExtension);
+  }
 
-if(program.install) InstallDependencies(extensionName);
+}
