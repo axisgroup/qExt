@@ -1,11 +1,8 @@
-'use strict';
-
 var Rx = require('rxjs');
 var webpack = require('webpack');
 
 module.exports = function(extensionName) {
   return Rx.Observable.create(observer => {
-    // Define webpack compiler
     const compiler = webpack({
       entry: [`./src/${extensionName}.js`],
       output: {
@@ -35,12 +32,7 @@ module.exports = function(extensionName) {
       }
     });
 
-
-    // Compile once, then complete Observable
-    compiler.run((err, stats) => {
-      console.log("[webpack:build]", stats.toString({colors: true}));
-      observer.next(extensionName);
-      observer.complete();
-    })
+    observer.next({ extensionName: extensionName, compiler: compiler })
+    observer.complete();
   })
 }
