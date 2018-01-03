@@ -1,22 +1,21 @@
 # qExt
 
-Create a new Qlik Sense Extension project with ease.
+qExt is a tool that allows you to easily build Qlik Sense Extensions in a server environment
 
 ---
 
 ### Initial Setup
 
 What you'll need to use qExt
- * [Node.js](https://nodejs.org/en/) (version x.x.x or higher)
- * Qlik Sense Server configured with [Header Authentication](http://help.qlik.com/en-US/sense-developer/September2017/Subsystems/Platform/Content/Examples/config-header-authentication.htm)
- * Global installation of create-qext module
+* [Node.js](https://nodejs.org/en/)
+* [Qlik Sense Server configured with Header Authentication](http://help.qlik.com/en-US/sense-developer/September2017/Subsystems/Platform/Content/Examples/config-header-authentication.htm)
+* Global installation of qext module
+
+`npm install -g qext`
  
- `npm install -g create-qext`
- 
- 
- ### Creating a new project
- 1. Open command line and go to the desired path where you would like the extension project to be built.
- 2. Enter `create-qext my-extension` (replacing my-extension with the name of the extension you are building).
- 3. After the extension project folder has been created, go into `my-extension/config/server.config.json` and update Qlik Sense host and user properties.
- 4. Back in the command line type `cd my-extension` and hit enter
- 5. Now type `npm start` and then enter.
+### Creating a new project
+1. Run `qext --create-extension [name]` to create new extension project directory.
+2. Change directory to the project that was just created.
+3. Run `npm install` to install the `qext-scripts` package.
+4. Configure the `server.config.json` file to the appropriate host and user.
+5. Run `npm start` to start listening to changes within your src directory.
