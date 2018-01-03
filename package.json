@@ -1,6 +1,6 @@
 {
   "name": "qext",
-  "version": "0.1.4",
+  "version": "0.2.0",
   "description": "README",
   "main": "index.js",
   "scripts": {
@@ -23,5 +23,6 @@
   "devDependencies": {},
   "dependencies": {
     "commander": "^2.12.2",
-    "fs-extra": "^5.0.0"}
+    "fs-extra": "^5.0.0"
+  }
 }
