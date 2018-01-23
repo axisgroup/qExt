@@ -16,9 +16,11 @@ program
   .parse(process.argv);
 
 
-if(program.createExtension) {
+if(program.createExtension) { // if --create-extension flag executed..
+  // if flag wasn't given a name, it will be of type boolean. Prompt user to enter name
   if(typeof(program.createExtension) === 'boolean') console.log('Provide a name for your extension');
-  else {
+  else { // if name provided..
+    
     CreateExtension(program.createExtension);
 
     if(program.install) InstallDependencies(program.createExtension);
