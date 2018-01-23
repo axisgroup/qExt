@@ -17,16 +17,24 @@ module.exports = function(extensionName) {
     name: extensionName,
     version: '0.1.0',
     scripts: {
-      "build": "qext-scripts -b",
-      "watch": "qext-scripts -w",
-      "deploy": "qext-scripts -d",
-      "build-deploy": "qext-scripts -b -d",
-      "watch-deploy": "qext-scripts -w -d",
-      "build-source": "qext-scripts -B",
-      "watch-source": "qext-scripts -W",
-      "build-deploy-source": "qext-scripts -B -d",
-      "watch-deploy-source": "qext-scripts -W -d",
-      "start": "qext-scripts -w -d"
+      "build-webpack": "qext-scripts -b",
+      "watch-webpack": "qext-scripts -w",
+
+      "build-vanilla": "qext-scripts -B",
+      "watch-vanilla": "qext-scripts -W",
+
+      "deploy-server": "qext-scripts -d",
+      "deploy-desktop": "qext-scripts -D",
+
+      "build-webpack-deploy-server": "qext-scripts -b -d",
+      "watch-webpack-deploy-server": "qext-scripts -w -d",
+      "build-webpack-deploy-desktop": "qext-scripts -b -D",
+      "watch-webpack-deploy-desktop": "qext-scripts -w -D",
+
+      "build-vanilla-deploy-server": "qext-scripts -B -d",
+      "watch-vanilla-deploy-server": "qext-scripts -W -d",
+      "build-vanilla-deploy-desktop": "qext-scripts -B -D",
+      "watch-vanilla-deploy-desktop": "qext-scripts -W -D"
     },
     devDependencies: {
       "qext-scripts": "0.x"
