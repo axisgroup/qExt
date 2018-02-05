@@ -5,6 +5,11 @@ module.exports = function(extensionName) {
   childProcess.spawn(
     'npm',
     ['install', '--save', 'qext-scripts'],
-    { env: process.env, cwd: process.cwd() +`/${extensionName}`, stdio: 'inherit' }
+    { 
+      env: process.env,
+      cwd: process.cwd() +`/${extensionName}`,
+      shell: true,
+      stdio: 'inherit'
+    }
   )
 }

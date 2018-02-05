@@ -4,7 +4,6 @@
 
 var path = require('path');
 var program = require('commander');
-var childProcess = require('child_process');
 
 var CreateExtension = require(path.resolve(__dirname, '../scripts/create-extension.js'));
 var InstallDependencies = require(path.resolve(__dirname, '../scripts/install-dependencies.js'));
