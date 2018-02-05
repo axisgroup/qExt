@@ -112,9 +112,9 @@ zipDist$.connect();
 /* ================================
     Deployment
 ================================ */
+var serverConfig = require(`${process.cwd()}/server.config.json`);
 // Deploy to Server
 if(program.deployServer) {
-  var serverConfig = require(`${process.cwd()}/server.config.json`);
 
   // if extension being built or watched, wait for output of zip file
   if(program.watchWebpack
@@ -157,16 +157,15 @@ else if(program.deployDesktop) {
     extensionBuild$.connect();
 
     var deployDesktop$ = extensionBuild$
-      .switchMap(o => new DeployDesktop(o))
+      .switchMap(o => new DeployDesktop(o, serverConfig))
       .publish();
 
     deployDesktop$.connect();
   }
   // else, just take already existing build
   else {
-    console.log('desktop deploy');
     var deployDesktop$ = extension$
-      .switchMap(o => new DeployDesktop(o))
+      .switchMap(o => new DeployDesktop(o, serverConfig))
       .publish();
 
     deployDesktop$.connect();

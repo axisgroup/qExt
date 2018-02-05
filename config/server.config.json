@@ -8,5 +8,6 @@
   },
   "addParams": {
     "withCredentials": false
-  }
+  },
+  "desktopDestination": "C:\\Users\\%username%\\Documents\\Qlik\\Sense\\Extensions"
 }
