@@ -1,12 +1,15 @@
 var fs = require('fs-extra');
 var Rx = require('rxjs');
 
-module.exports = function(extensionName) {
+module.exports = function(extensionName, serverConfig) {
   return Rx.Observable.create(observer => {
     var dist = `./dist/${extensionName}`;
-    var destination = `/Users/johnbellizzi/Documents/Qlik/Sense/Extensions/${extensionName}`;
+    var destination = serverConfig.desktopDestination +'/' +extensionName;
+    var emptyDir = fs.emptyDir(destination);
 
-    var copyDist = fs.copy(dist, destination);
+    var copyDist = emptyDir.then(() => {
+      return fs.copy(dist, destination);
+    })
 
     copyDist.then(() => {
       observer.next(extensionName);

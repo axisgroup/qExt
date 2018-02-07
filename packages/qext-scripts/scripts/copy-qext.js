@@ -8,6 +8,9 @@ module.exports = function(extensionName) {
 
     // Copy .qext file
     var copyQEXT = createDistFolder.then(() => {
+      var dist = `./dist/${extensionName}`;
+      fs.emptyDirSync(dist);
+    
       var srcQEXT = `./src/${extensionName}.qext`;
       var distQEXT = `./dist/${extensionName}/${extensionName}.qext`;
 

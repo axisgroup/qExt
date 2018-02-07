@@ -6,11 +6,17 @@ module.exports = function(extensionName) {
     var src = `./src`;
     var dist = `./dist/${extensionName}`
 
-    var copySource = fs.copy(src, dist);
+    // Ensure Dist folder exists
+    var ensureDir = fs.ensureDir(dist);
+
+    // Copy src contents into dist folder
+    var copySource = ensureDir.then(() => {
+      return fs.copy(src, dist);
+    });
 
     copySource.then(() => {
       observer.next(extensionName);
       observer.complete();
-    })
+    });
   })
 }
