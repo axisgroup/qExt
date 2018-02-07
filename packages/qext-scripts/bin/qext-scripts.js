@@ -112,7 +112,8 @@ zipDist$.connect();
 /* ================================
     Deployment
 ================================ */
-var serverConfig = require(`${process.cwd()}/server.config.json`);
+var serverConfig = require(`${process.cwd()}/deployment.config.json`).server;
+var desktopConfig = require(`${process.cwd()}/deployment.config.json`).desktop;
 // Deploy to Server
 if(program.deployServer) {
 
@@ -157,7 +158,7 @@ else if(program.deployDesktop) {
     extensionBuild$.connect();
 
     var deployDesktop$ = extensionBuild$
-      .switchMap(o => new DeployDesktop(o, serverConfig))
+      .switchMap(o => new DeployDesktop(o, desktopConfig))
       .publish();
 
     deployDesktop$.connect();
@@ -165,7 +166,7 @@ else if(program.deployDesktop) {
   // else, just take already existing build
   else {
     var deployDesktop$ = extension$
-      .switchMap(o => new DeployDesktop(o, serverConfig))
+      .switchMap(o => new DeployDesktop(o, desktopConfig))
       .publish();
 
     deployDesktop$.connect();

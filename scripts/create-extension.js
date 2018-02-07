@@ -59,7 +59,7 @@ module.exports = function(extensionName) {
     fs.moveSync(path.resolve(`${process.cwd()}/${extensionName}/src/extension-template.js`), `${process.cwd()}/${extensionName}/src/${extensionName}.js`);
     fs.moveSync(path.resolve(`${process.cwd()}/${extensionName}/src/extension-template.qext`), `${process.cwd()}/${extensionName}/src/${extensionName}.qext`);
 
-    fs.copySync(path.resolve(__dirname, '../config/server.config.json'), `./${extensionName}/server.config.json`);
+    fs.copySync(path.resolve(__dirname, '../config/deployment.config.json'), `./${extensionName}/deployment.config.json`);
   } else {
     console.error('Project already exists');
   }
