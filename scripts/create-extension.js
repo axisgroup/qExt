@@ -56,10 +56,31 @@ module.exports = function(extensionName) {
     fs.copySync(path.resolve(__dirname, '../extension-template'), `./${extensionName}/src`);
 
     // Rename main js and qext files to extension name
-    fs.moveSync(path.resolve(`${process.cwd()}/${extensionName}/src/extension-template.js`), `${process.cwd()}/${extensionName}/src/${extensionName}.js`);
-    fs.moveSync(path.resolve(`${process.cwd()}/${extensionName}/src/extension-template.qext`), `${process.cwd()}/${extensionName}/src/${extensionName}.qext`);
+    fs.moveSync(
+      path.resolve(`${process.cwd()}/${extensionName}/src/extension-template.js`), 
+      `${process.cwd()}/${extensionName}/src/${extensionName}.js`
+    );
+    fs.moveSync(
+      path.resolve(`${process.cwd()}/${extensionName}/src/extension-template.qext`), 
+      `${process.cwd()}/${extensionName}/src/${extensionName}.qext`
+    );
 
-    fs.copySync(path.resolve(__dirname, '../config/deployment.config.json'), `./${extensionName}/deployment.config.json`);
+
+    // Update content in .scss file
+    const styleFile = path.resolve(`${process.cwd()}/${extensionName}/src/style.scss`);
+    const styleWrapper = `.qv-object-${extensionName} {
+  
+}`;
+
+    fs.writeFileSync(styleFile, styleWrapper, (err) => {
+      if(err) throw err;
+    })
+
+
+    fs.copySync(
+      path.resolve(__dirname, '../config/deployment.config.json'), 
+      `./${extensionName}/deployment.config.json`
+    );
   } else {
     console.error('Project already exists');
   }
