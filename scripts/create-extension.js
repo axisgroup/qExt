@@ -72,7 +72,7 @@ module.exports = function(extensionName) {
   
 }`;
 
-    fs.writeFileSync(styleFile, styleWrapper, (err) => {
+    fs.writeFile(styleFile, styleWrapper, (err) => {
       if(err) throw err;
     })
 
