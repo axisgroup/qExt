@@ -17,6 +17,7 @@ var Rx = require('rxjs');
 var CopyQEXT = require(path.resolve(__dirname, '../scripts/copy-qext.js'));
 var DefineWebpack = require(path.resolve(__dirname, '../scripts/define-webpack.js'));
 var WatchWebpack = require(path.resolve(__dirname, '../scripts/watch-webpack.js'));
+var WatchQEXT = require(path.resolve(__dirname, '../scripts/watch-qext.js'));
 var BuildWebpack = require(path.resolve(__dirname, '../scripts/build-webpack.js'));
 
 var WatchVanilla = require(path.resolve(__dirname, '../scripts/watch-vanilla.js'));
@@ -72,6 +73,8 @@ if(program.watchWebpack || program.buildWebpack) { // If -w or -b flag is set, w
 if(program.watchWebpack) { // if -w flag, webpack --watch
   var watchWebpack$ = defineWebpack$
     .switchMap(o => new WatchWebpack(o))
+    .switchMap(o => new WatchQEXT(o))
+    .switchMap(o => new CopyQEXT(o))
     .publish();
 
     watchWebpack$.connect();
