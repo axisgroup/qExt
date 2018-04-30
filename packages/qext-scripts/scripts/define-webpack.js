@@ -27,6 +27,18 @@ module.exports = function(extensionName) {
               { loader: 'css-loader' },
               { loader: 'sass-loader' }
             ]
+          },
+          {
+            test: /\.(png|svg|jpg|gif)$/,
+            use: [
+              {
+                loader: 'file-loader',
+                options: {
+                  name: '[name].[ext]',
+                  publicPath: `/extensions/${extensionName}/`
+                }
+              }
+            ]
           }
         ]
       }
