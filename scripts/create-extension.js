@@ -55,6 +55,9 @@ module.exports = function(extensionName) {
     // Copy Template extension files into new project
     fs.copySync(path.resolve(__dirname, '../extension-template'), `./${extensionName}/src`);
 
+    // Create static directory
+    fs.ensureDirSync(`./${extensionName}/static`);
+
     // Rename main js and qext files to extension name
     fs.moveSync(
       path.resolve(`${process.cwd()}/${extensionName}/src/extension-template.js`), 
