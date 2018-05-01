@@ -22,6 +22,8 @@ var BuildWebpack = require(path.resolve(__dirname, '../scripts/build-webpack.js'
 
 var WatchVanilla = require(path.resolve(__dirname, '../scripts/watch-vanilla.js'));
 var CopySource = require(path.resolve(__dirname, '../scripts/copy-source.js'));
+var WatchStatic = require(path.resolve(__dirname, '../scripts/watch-static.js'));
+var CopyStatic = require(path.resolve(__dirname, '../scripts/copy-static.js'));
 
 var ZipDist = require(path.resolve(__dirname, '../scripts/zip-dist.js'));
 
@@ -63,6 +65,7 @@ var watchWebpack$ = new Rx.Subject(),
 if(program.watchWebpack || program.buildWebpack) { // If -w or -b flag is set, we are bundling with webpack
   var defineWebpack$ = extension$
     .switchMap(o => new CopyQEXT(o))
+    .switchMap(o => new CopyStatic(o))
     .switchMap(o => new DefineWebpack(o))
     .publish();
   
@@ -75,6 +78,8 @@ if(program.watchWebpack) { // if -w flag, webpack --watch
     .switchMap(o => new WatchWebpack(o))
     .switchMap(o => new WatchQEXT(o))
     .switchMap(o => new CopyQEXT(o))
+    .switchMap(o => new WatchStatic(o))
+    .switchMap(o => new CopyStatic(o))
     .publish();
 
     watchWebpack$.connect();
