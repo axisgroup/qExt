@@ -63,3 +63,18 @@ In the **Usage** section above, we saw 2 examples of npm scripts that can be run
 13. `build-vanilla-deploy-desktop` will zip your code as in step #3 and then will deploy the resulting zip file to the desktop.
 
 14. `watch-vanilla-deploy-desktop` will watch and zip your code as in step #4 and will deploy the resulting zip file to the desktop any time a change is made.
+
+
+## Handling Static Assets
+
+When a new project is created using qExt, you will see the directories `src/assets` and `static/`.
+
+### Assets
+
+The `src/assets` folder allows you to load images into your extension by relative path. For example, let's say you have a file `logo.png` stored in `src/assets` that you want to include as a background in your extension using CSS. You can pull this image in by defining `background-image: url('./assets/logo.png')`. When Webpack builds your extension, it will convert the url automatically so that it points to `/extensions/extension-name/logo.png`
+
+This isn't limited to just image urls in css - The same can be defined in html (`<img src="./assets/logo.png">`) and even in your javascript (`import logo from "./assets/logo.png"`).
+
+### Static
+
+Files stored in the `static` directory don't get processed by Webpack, but instead are copied directly into the distribution folder as-is. In order to use files from the `static` directory in your project, you must reference them by absolute path (ex. `background-image: url("/extensions/extension-name/static/logo.png")`).
