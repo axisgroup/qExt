@@ -6,5 +6,5 @@
 
 ### Features
 
-* added file-loader to webpack build to allow images (.png, .jpg, .gif, .svg) to be used by reference
-* added `static` directory that is copied into the build for any resources that can't be loaded by reference
+* added file-loader to webpack build to allow images (.png, .jpg, .gif, .svg) to be referenced by relative path
+* added `static` directory that is copied into the build for any resources that can't be referenced by relative path
