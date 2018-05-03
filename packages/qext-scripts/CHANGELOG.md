@@ -2,7 +2,7 @@
 
 ### Bug Fixes
 
-* watch-webpack now re-builds when the `.qext` file is updated
+* watch-webpack now re-builds when the `.qext` file is updated ([1](https://github.com/axisgroup/qExt/issues/1))
 
 ### Features
 
