@@ -58,8 +58,8 @@ module.exports = function(extensionName) {
     // Create static directory
     fs.ensureDirSync(`./${extensionName}/static`);
 
-    // Create assets directory
-    fs.ensureDirSync(`./${extensionName}/assets`);
+    // Create static directory
+    fs.ensureDirSync(`./${extensionName}/src/assets`);
 
     // Rename main js and qext files to extension name
     fs.moveSync(
