@@ -46,6 +46,17 @@ module.exports = function(extensionName) {
     path.join(root, 'package.json'),
     JSON.stringify(packageJson, null, 2)
   );
+  
+
+  // Create .babelrc
+  const babelrcContents = {
+    "presets": ["env"]
+  };
+
+  fs.writeFileSync(
+    path.join(root, '.babelrc'),
+    JSON.stringify(babelrcContents, null, 2)
+  );
 
 
   /* ===============================
