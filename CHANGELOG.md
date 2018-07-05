@@ -1,8 +1,8 @@
-# 0.5.0 (2018-04-30)
+# 0.5.2 (2018-07-05)
 
-### Features
+### Bug Fixes
 
-* create `static` directory when a new project is built
+* create .babelrc file in main directory for compiling of code
 
 
 # 0.5.1 (2018-05-03)
@@ -10,3 +10,10 @@
 ### Features
 
 * create `assets` directory when a new project is built
+
+
+# 0.5.0 (2018-04-30)
+
+### Features
+
+* create `static` directory when a new project is built
