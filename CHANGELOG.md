@@ -1,8 +1,8 @@
 # 0.5.3 (2018-11-14)
 
-### Features
+### Maintenace
 
-* added css support in qext-scripts
+* removed unused variable
 
 # 0.5.2 (2018-07-05)
 
