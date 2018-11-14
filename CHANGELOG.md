@@ -1,3 +1,9 @@
+# 0.5.3 (2018-11-14)
+
+### Features
+
+* added css support in qext-scripts
+
 # 0.5.2 (2018-07-05)
 
 ### Bug Fixes
