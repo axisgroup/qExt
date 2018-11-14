@@ -1,3 +1,9 @@
+# 0.5.3 (2018-11-14)
+
+### Maintenace
+
+* removed unused variable
+
 # 0.5.2 (2018-07-05)
 
 ### Bug Fixes

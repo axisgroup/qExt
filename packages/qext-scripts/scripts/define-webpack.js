@@ -1,5 +1,5 @@
-var Rx = require('rxjs');
-var webpack = require('webpack');
+var Rx = require("rxjs");
+var webpack = require("webpack");
 
 module.exports = function(extensionName) {
   return Rx.Observable.create(observer => {
@@ -14,27 +14,31 @@ module.exports = function(extensionName) {
           {
             test: /\.js$/,
             exclude: /node_modules/,
-            loader: 'babel-loader'
+            loader: "babel-loader"
           },
           {
             test: /\.html$/,
-            loader: 'html-loader'
+            loader: "html-loader"
           },
           {
             test: /\.scss$/,
             use: [
-              { loader: 'style-loader' },
-              { loader: 'css-loader' },
-              { loader: 'sass-loader' }
+              { loader: "style-loader" },
+              { loader: "css-loader" },
+              { loader: "sass-loader" }
             ]
+          },
+          {
+            test: /\.css$/,
+            use: [{ loader: "style-loader" }, { loader: "css-loader" }]
           },
           {
             test: /\.(png|svg|jpg|gif)$/,
             use: [
               {
-                loader: 'file-loader',
+                loader: "file-loader",
                 options: {
-                  name: '[name].[ext]',
+                  name: "[name].[ext]",
                   publicPath: `/extensions/${extensionName}/`
                 }
               }
@@ -44,7 +48,7 @@ module.exports = function(extensionName) {
       }
     });
 
-    observer.next({ extensionName: extensionName, compiler: compiler })
+    observer.next({ extensionName: extensionName, compiler: compiler });
     observer.complete();
-  })
-}
+  });
+};
