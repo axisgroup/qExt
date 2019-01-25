@@ -1,1 +1,3 @@
 *.tgz
+TestExtension/
+node_modules/
