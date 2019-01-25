@@ -1,13 +1,11 @@
 import pack from './package.json'
 
+import * as Components from './src/components/component-exports'
+
 const baseObj = {
   version: pack.version
 }
 
-const QextScripts = {
-  baseObj
-}
-
-console.log(QextScripts)
+const QextScripts = Object.assign(baseObj, Components)
 
 export default QextScripts

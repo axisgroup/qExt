@@ -1,6 +1,6 @@
 import program from 'commander'
 import fs from 'fs-extra'
-import { from, Subject, combineLatest, of, iif, Observable } from 'rxjs'
+import { from, Subject, combineLatest, of, iif } from 'rxjs'
 import { map, withLatestFrom, share, tap, switchMap, mergeMap, filter, pluck } from 'rxjs/operators'
 import { 
   deleteDist,
@@ -60,14 +60,7 @@ const extension$ = of(program.deployServer).pipe(
 
 // Remove Dist
 const removeDist$ = extension$.pipe(
-  switchMap(() => Observable.create(observer => {
-    const removeDist = fs.remove(`./dist`)
-
-    removeDist.then(() => {
-      observer.next('dist removed')
-      observer.complete()
-    })
-  })),
+  deleteDist(),
   tap(distStatus => console.log(`${distStatus}\n`)),
   share(1)
 )
