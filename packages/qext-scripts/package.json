@@ -3,6 +3,9 @@
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
+  "bin": {
+    "qext-scripts": "./bin/qext-scripts.js"
+  },
   "scripts": {
     "build": "node scripts/build.js",
     "watch": "node scripts/build.js --watch",

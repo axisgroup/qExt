@@ -13,7 +13,7 @@ const compiler = webpack({
   entry: [`./src/index.js`],
   output: {
     path: `${process.cwd()}/bin`,
-    filename: 'qext.js'
+    filename: 'qext-scripts.js'
   },
   mode: 'development',
   target: 'node',
