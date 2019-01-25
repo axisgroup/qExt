@@ -11,13 +11,10 @@ export default inputAccessorFunction => {
   return extension$ => extension$.pipe(
     map(accessorFunction),
     switchMap(extension => Observable.create(observer => {
-      const copySrc = fs.copy(
-        `./src`,
-        `./dist/${extension}`
-      )
-
-      copySrc.then(() => {
-        observer.next('source copied')
+      const removeDist = fs.remove(`./dist`)
+  
+      removeDist.then(() => {
+        observer.next('dist removed')
         observer.complete()
       })
     }))

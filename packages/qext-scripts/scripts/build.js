@@ -1,18 +1,6 @@
-const fs = require('fs-extra')
 const program = require('commander')
-const path = require('path')
-const babel = require('babel-core')
-
-
-// Define source and target
-const srcDir = 'src'
-const targetDir = 'dist/bundle'
-
-// Set up dist
-const mkDist = fs.ensureDir(targetDir)
-
-// Run for initial compile
-compileFromDir(srcDir, targetDir)
+const webpack = require('webpack')
+const nodeExternals = require('webpack-node-externals')
 
 
 // Listen for command parameters
@@ -20,56 +8,38 @@ program
   .option('-w, --watch', 'Watch')
   .parse(process.argv)
 
-// Watch changes in source
+
+const compiler = webpack({
+  entry: [`./src/index.js`],
+  output: {
+    path: `${process.cwd()}/bin`,
+    filename: 'qext.js'
+  },
+  mode: 'development',
+  target: 'node',
+  externals: [nodeExternals()],
+  module: {
+    rules: [
+      {
+        test: /\.js$/,
+        exclude: /node_modules/,
+        loader: 'babel-loader'
+      }
+    ]
+  },
+})
+
+
 if(program.watch) {
-  fs.watch('src', { recursive: true }, (e, file) => {
-    console.log(`updated ${file}`)
-    
-    compileFromDir(srcDir, targetDir)
+  compiler.watch({}, (err, stats) => {
+    console.log('[webpack:build]', stats.toString({ colors: true }), '\n')
+
+    if(err !== null) console.log(err)
   })
-}
-
-
-function compileFromDir(srcDir, targetDir) {
-  // read all files in srcDir
-  const readSrc = mkDist.then(() => fs.readdir(srcDir))
+} else {
+  compiler.run((err, stats) => {
+    console.log('[webpack:build]', stats.toString({ colors: true }), '\n')
   
-  readSrc.then(srcFiles => {
-    // for each file
-    srcFiles.forEach(file => {
-      // get lstat
-      const fileLStat = fs.lstat(path.join(srcDir, file))
-  
-      // stats output
-      fileLStat.then(stats => {
-        // if stats is a .js file
-        if(stats.isFile() && file.match(/.js$/g) !== null) {
-          babel.transformFile(
-            path.join(srcDir, file),
-            {
-              presets: ['es2015'],
-              plugins: [
-                'transform-object-rest-spread',
-                'add-module-exports',
-                'transform-es2015-modules-commonjs',
-                'transform-runtime'
-              ]
-            },
-            function(err, result) {
-              if(err) return console.log(err)
-              fs.writeFile(path.join(targetDir, file), result.code, function(err) {
-                if(err) return console.log(err)
-              })
-            }
-          )
-        } else if(stats.isDirectory()) {
-          fs.ensureDirSync(path.join(targetDir, file))
-          compileFromDir(
-            path.join(srcDir, file),
-            path.join(targetDir, file)
-          )
-        }
-      })
-    })
+    if(err !== null) console.log(err)
   })
 }

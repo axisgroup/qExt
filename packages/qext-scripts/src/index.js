@@ -1,8 +1,9 @@
-const program = require('commander')
-const fs = require("fs-extra")
-import { from, Subject, combineLatest, of, iif } from 'rxjs'
-import { map, withLatestFrom, share, tap, switchMap, mergeMap, filter } from 'rxjs/operators'
+import program from 'commander'
+import fs from 'fs-extra'
+import { from, Subject, combineLatest, of, iif, Observable } from 'rxjs'
+import { map, withLatestFrom, share, tap, switchMap, mergeMap, filter, pluck } from 'rxjs/operators'
 import { 
+  deleteDist,
   copyQext, 
   copyStatic, 
   copySrc,
@@ -12,6 +13,7 @@ import {
   uploadExtension,
   authenticate
 } from './components/component-exports'
+
 
 program
   .option('-b, --webpack-build', 'Build with Webpack')
@@ -56,18 +58,37 @@ const extension$ = of(program.deployServer).pipe(
 )
 
 
+// Remove Dist
+const removeDist$ = extension$.pipe(
+  switchMap(() => Observable.create(observer => {
+    const removeDist = fs.remove(`./dist`)
+
+    removeDist.then(() => {
+      observer.next('dist removed')
+      observer.complete()
+    })
+  })),
+  tap(distStatus => console.log(`${distStatus}\n`)),
+  share(1)
+)
+
+
 // Copy qext
-const copyQext$ = extension$.pipe(
+const copyQext$ = removeDist$.pipe(
+  withLatestFrom(extension$),
   /* Only copy Qext if we are bundling with webpack */
   filter(() => program.webpackBuild || program.webpackWatch),
+  pluck(1),
   copyQext(),
   tap(qextStatus => console.log(`${qextStatus}\n`))
 )
 
 // Copy Static Directory
-const copyStatic$ = extension$.pipe(
+const copyStatic$ = removeDist$.pipe(
+  withLatestFrom(extension$),
   /* Only copy Static if we are bundling with webpack */
   filter(() => program.webpackBuild || program.webpackWatch),
+  pluck(1),
   copyStatic(),
   tap(staticStatus => console.log(`${staticStatus}\n`))
 )
@@ -78,11 +99,6 @@ const webpack$ = extension$.pipe(
   tap(() => console.log(`webpack defined\n`)),
   share(1)
 )
-
-// // Build
-// const build$ = webpack$.pipe(
-//   build({ watch: true })
-// )
 
 const build$ = of({ 
   build: program.webpackBuild, 
@@ -99,7 +115,9 @@ const build$ = of({
     ),
 
     /* copy source files */
-    extension$.pipe(
+    removeDist$.pipe(
+      withLatestFrom(extension$),
+      pluck(1),
       copySrc(),
       tap(srcStatus => console.log(`${srcStatus}\n`))
     )

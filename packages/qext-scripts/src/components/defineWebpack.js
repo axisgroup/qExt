@@ -1,6 +1,5 @@
 import webpack from 'webpack'
 
-
 export default extension => webpack({
   entry: [`./src/${extension}.js`],
   output: {
