@@ -14,7 +14,8 @@
   "keywords": [],
   "author": "John Bellizzi",
   "license": "ISC",
-  "devDependencies": {
+  "dependencies": {
+    "rxjs": "^6.3.3",
     "babel-core": "^6.26.3",
     "babel-loader": "^7.1.5",
     "babel-plugin-add-module-exports": "^1.0.0",
@@ -31,8 +32,5 @@
     "webpack-node-externals": "^1.7.2",
     "xmlhttprequest": "^1.8.0",
     "zip-dir": "^1.0.2"
-  },
-  "dependencies": {
-    "rxjs": "^6.3.3"
   }
 }
