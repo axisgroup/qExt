@@ -10,16 +10,17 @@ export default inputAccessorFunction => {
 
   return extension$ => extension$.pipe(
     map(accessorFunction),
-    switchMap(extension => Observable.create(observer => {
+    switchMap(config => Observable.create(observer => {
       const copyStatic = fs.copy(
-        `./static`,
-        `./dist/${extension}/static`
+        config.compile.static,
+        `./dist/${config.extension}/static`
       )
   
       copyStatic.then(() => {
         observer.next('static copied')
         observer.complete()
       })
+      .catch(err => observer.error(err))
     }))
   )
 }

@@ -44,5 +44,6 @@ export default (cookieJar$) => Observable.create(observer => {
     take(3),
     filter(err => err.authenticate),
     tap(t => console.log(`\n\n${t.message}`))
-  ))
+  )),
+  tap(auth => console.log(`${auth.message}\n`))
 )

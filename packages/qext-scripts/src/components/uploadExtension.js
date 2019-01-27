@@ -11,16 +11,16 @@ export default inputAccessorFunction => {
 
   return obs$ => obs$.pipe(
     map(accessorFunction),
-    switchMap(obj => Observable.create(observer => {
+    switchMap(({ config, cookie }) => Observable.create(observer => {
       const options = {
         method: "DELETE",
         host: "172.16.84.102",
         port: null,
-        path: `/qrs/extension/name/${obj.extension}?xrfkey=123456789abcdefg`,
+        path: `/qrs/extension/name/${config.extension}?xrfkey=123456789abcdefg`,
         headers: {
           "x-qlik-xrfkey": "123456789abcdefg",
           "content-type": "application/zip",
-          "Cookie": `X-Qlik-Session=${obj.cookie}`
+          "Cookie": `X-Qlik-Session=${cookie}`
         }
       }
 
@@ -36,14 +36,16 @@ export default inputAccessorFunction => {
             else if(res.statusCode === 400) {
               observer.next({
                 message: 'not found',
-                ...obj
+                config,
+                cookie
               })
               observer.complete()
             }
             else if(res.statusCode >= 200 && res.statusCode < 300) {
               observer.next({
                 message: 'deleted',
-                ...obj
+                config,
+                cookie
               })
               observer.complete()
             }
@@ -61,8 +63,8 @@ export default inputAccessorFunction => {
 
       request.end()
     })),
-    switchMap(obj => Observable.create(observer => {
-      const extensionPath = `./dist/${obj.extension}.zip`
+    switchMap(({ config, cookie }) => Observable.create(observer => {
+      const extensionPath = `${config.output}/${config.extension}.zip`
 
       const options = {
         method: "POST",
@@ -72,7 +74,7 @@ export default inputAccessorFunction => {
         headers: {
           "x-qlik-xrfkey": "123456789abcdefg",
           "content-type": "application/zip",
-          "Cookie": `X-Qlik-Session=${obj.cookie}`
+          "Cookie": `X-Qlik-Session=${cookie}`
         }
       }
 

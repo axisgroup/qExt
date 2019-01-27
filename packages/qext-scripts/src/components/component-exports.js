@@ -5,7 +5,6 @@ import copySrc from './copySrc'
 import defineWebpack from './defineWebpack'
 import build from './build'
 import zip from './zip'
-import deleteExtension from './deleteExtension'
 import uploadExtension from './uploadExtension'
 import authenticate from './authenticate'
 
@@ -17,7 +16,6 @@ export {
   defineWebpack,
   build,
   zip,
-  deleteExtension,
   uploadExtension,
   authenticate
 }

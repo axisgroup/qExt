@@ -1,7 +1,21 @@
-import program from 'commander'
-import fs from 'fs-extra'
-import { from, Subject, combineLatest, of, iif } from 'rxjs'
-import { map, withLatestFrom, share, tap, switchMap, mergeMap, filter, pluck } from 'rxjs/operators'
+import { stat, readJson } from 'fs-extra'
+import { 
+  from, 
+  Subject, 
+  combineLatest, 
+  of, 
+  iif, 
+  merge 
+} from 'rxjs'
+import { 
+  withLatestFrom, 
+  share, 
+  switchMap, 
+  mergeMap, 
+  filter, 
+  pluck 
+} from 'rxjs/operators'
+
 import { 
   deleteDist,
   copyQext, 
@@ -14,129 +28,118 @@ import {
   authenticate
 } from './components/component-exports'
 
+/* Get Config */
+const configFile = './qext.config.json'
 
-program
-  .option('-b, --webpack-build', 'Build with Webpack')
-  .option('-w, --webpack-watch', 'Watch with Webpack')
-  .option('-d, --deploy-server', 'Deploy to Server')
-  .parse(process.argv)
+const qextConfig$ = from(stat(configFile)).pipe(
+  switchMap(() => from(readJson(configFile))),
+  share(1)
+)
 
 
-/* Create cookie jar to store cookies for any future
-    uploads */
+/* Cookie Jar */
 const cookieJar$ = new Subject()
 
 /* Initialize authentication */
-const initialAuthenticate$ = authenticate(cookieJar$).pipe(
-  tap(auth => console.log(`${auth.message}\n`))
-)
+const authenticate$ = qextConfig$.pipe(
+  mergeMap(config => iif(
+    /* if deploying.. */
+    () => config.deploy,
 
+    /* authenticate */
+    authenticate(cookieJar$),
 
-/* Get extension name from .qext file */
-const extensionName = fs.readdir(`${process.cwd()}/src`)
-  .then(ext => ext
-    .filter(file => file.indexOf('.qext') > -1)
-    [0].split('.qext')[0]
-  )
-
-
-const extension$ = of(program.deployServer).pipe(
-  mergeMap(deployServer => iif(
-    /* if deployServer flag set.. */
-    () => deployServer,
-
-    /* prompt for user authentication */
-    initialAuthenticate$.pipe(
-      switchMap(() => from(extensionName))
-    ),
-
-    /* otherwise, skip authentication */
-    from(extensionName)
-  )),
-  tap(extension => console.log(`\nconnecting project ${extension}\n`)),
-  share(1)
-)
-
-
-// Remove Dist
-const removeDist$ = extension$.pipe(
-  deleteDist(),
-  tap(distStatus => console.log(`${distStatus}\n`)),
-  share(1)
-)
-
-
-// Copy qext
-const copyQext$ = removeDist$.pipe(
-  withLatestFrom(extension$),
-  /* Only copy Qext if we are bundling with webpack */
-  filter(() => program.webpackBuild || program.webpackWatch),
-  pluck(1),
-  copyQext(),
-  tap(qextStatus => console.log(`${qextStatus}\n`))
-)
-
-// Copy Static Directory
-const copyStatic$ = removeDist$.pipe(
-  withLatestFrom(extension$),
-  /* Only copy Static if we are bundling with webpack */
-  filter(() => program.webpackBuild || program.webpackWatch),
-  pluck(1),
-  copyStatic(),
-  tap(staticStatus => console.log(`${staticStatus}\n`))
-)
-
-// Define Webpack
-const webpack$ = extension$.pipe(
-  map(extension => defineWebpack(extension)),
-  tap(() => console.log(`webpack defined\n`)),
-  share(1)
-)
-
-const build$ = of({ 
-  build: program.webpackBuild, 
-  watch: program.webpackWatch 
-}).pipe(
-  mergeMap(buildType => iif(
-    /* if bundling with webpack .. */
-    () => buildType.build || buildType.watch,
-
-    /* webpack build */
-    webpack$.pipe(
-      /* watch files if webpack-watch flag set */
-      build({ watch: buildType.watch })
-    ),
-
-    /* copy source files */
-    removeDist$.pipe(
-      withLatestFrom(extension$),
-      pluck(1),
-      copySrc(),
-      tap(srcStatus => console.log(`${srcStatus}\n`))
-    )
+    /* else, skip authentication */
+    of('skipping authentication')
   ))
 )
 
 
-// Distribution Status
-const dist$ = combineLatest(copyQext$, copyStatic$, build$, () => 'dist updated')
+/* Remove Dist */
+const removeDist$ = authenticate$.pipe(
+  withLatestFrom(qextConfig$),
+  deleteDist(([authStatus, config]) => config.output),
+  share(1)
+)
 
-// Zip
+
+/* Copy qext file */
+const copyQext$ = removeDist$.pipe(
+  withLatestFrom(qextConfig$),
+  pluck(1),
+  /* Only copy qext if we are compiling */
+  filter(config => config.mode === "compile"),
+  copyQext()
+)
+
+
+/* Copy Static Directory */
+const copyStatic$ = removeDist$.pipe(
+  withLatestFrom(qextConfig$),
+  pluck(1),
+  /* Only copy static directory if compiling */
+  filter(config => config.mode === "compile"),
+  copyStatic()
+)
+
+
+/* Copy Source */
+const copySource$ = removeDist$.pipe(
+  withLatestFrom(qextConfig$),
+  pluck(1),
+  filter(config => config.mode === "vanilla"),
+  copySrc()
+)
+
+
+/* Define Webpack */
+const webpack$ = qextConfig$.pipe(
+  filter(config => config.mode === 'compile'),
+  defineWebpack(),
+  share(1)
+)
+
+
+/* Build */
+const build$ = webpack$.pipe(
+  withLatestFrom(qextConfig$),
+  build(([webpack, config]) => ({ webpack, config }))
+)
+
+
+/* Distribute */
+const dist$ = merge(
+  combineLatest(
+    copyStatic$,
+    copyQext$,
+    build$
+  ),
+  copySource$
+)
+
+
+/* Zip */
 const zip$ = dist$.pipe(
-  withLatestFrom(extension$),
-  zip(([distStatus, extension]) => extension)
+  withLatestFrom(qextConfig$),
+  pluck(1),
+  zip()
 )
 
 
-// Upload
+/* Upload */
 const upload$ = zip$.pipe(
-  filter(() => program.deployServer),
-  withLatestFrom(extension$, cookieJar$),
-  uploadExtension(([zipStatus, extension, cookie]) => ({
-    extension,
+  withLatestFrom(qextConfig$),
+  pluck(1),
+  filter(config => config.deploy),
+  withLatestFrom(cookieJar$),
+  uploadExtension(([config, cookie]) => ({
+    config,
     cookie
-  })),
-  tap(uploadStatus => console.log(`${uploadStatus}\n`))
+  }))
 )
 
-upload$.subscribe()
+
+upload$.subscribe(
+  console.log,
+  console.log
+)

@@ -1,6 +1,6 @@
 const fs = require('fs-extra')
 import { Observable } from 'rxjs'
-import { map, switchMap } from 'rxjs/operators'
+import { map, switchMap, tap } from 'rxjs/operators'
 
 export default inputAccessorFunction => {
   let accessorFunction
@@ -10,16 +10,17 @@ export default inputAccessorFunction => {
 
   return extension$ => extension$.pipe(
     map(accessorFunction),
-    switchMap(extension => Observable.create(observer => {
+    switchMap(config => Observable.create(observer => {
       const copySrc = fs.copy(
-        `./src`,
-        `./dist/${extension}`
+        `${config.vanilla.entry}`,
+        `${config.output}/${config.extension}`
       )
 
       copySrc.then(() => {
         observer.next('source copied')
         observer.complete()
       })
-    }))
+    })),
+    tap(sourceStatus => console.log(`${sourceStatus}\n`))
   )
 }

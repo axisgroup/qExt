@@ -1,6 +1,6 @@
 const fs = require('fs-extra')
 import { Observable } from 'rxjs'
-import { map, switchMap } from 'rxjs/operators'
+import { map, switchMap, tap } from 'rxjs/operators'
 
 export default inputAccessorFunction => {
   let accessorFunction
@@ -10,13 +10,14 @@ export default inputAccessorFunction => {
 
   return extension$ => extension$.pipe(
     map(accessorFunction),
-    switchMap(extension => Observable.create(observer => {
-      const removeDist = fs.remove(`./dist`)
+    switchMap(output => Observable.create(observer => {
+      const removeDist = fs.remove(`${output}`)
   
       removeDist.then(() => {
-        observer.next('dist removed')
+        observer.next(`${output} removed`)
         observer.complete()
       })
-    }))
+    })),
+    tap(distStatus => console.log(`${distStatus}\n`)),
   )
 }

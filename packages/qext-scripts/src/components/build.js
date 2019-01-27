@@ -1,5 +1,5 @@
 import { Observable } from "rxjs";
-import { map, switchMap } from 'rxjs/operators'
+import { map, switchMap, tap } from 'rxjs/operators'
 
 export default ({ inputAccessorFunction, watch }) => {
   let accessorFunction
@@ -9,26 +9,25 @@ export default ({ inputAccessorFunction, watch }) => {
 
   return obs$ => obs$.pipe(
     map(accessorFunction),
-    switchMap(compiler => Observable.create(observer => {
+    switchMap(([compiler, config]) => Observable.create(observer => {
       /* Watch */
-      if(watch) {
+      if(config.compile.watch) {
         compiler.watch({}, (err, stats) => {
           console.log('[webpack:build]', stats.toString({ colors: true }), '\n')
-  
+
           observer.next('built')
-  
           if(err !== null) observer.error(err)
         })
-      } 
+      }
 
       /* Build */
       else {
         compiler.run((err, stats) => {
           console.log('[webpack:build]', stats.toString({ colors: true }), '\n')
-    
-          observer.next('built')
-    
+
           if(err !== null) observer.error(err)
+
+          observer.next('built')
           observer.complete()
         })
       }

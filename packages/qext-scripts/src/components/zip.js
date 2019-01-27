@@ -10,15 +10,15 @@ export default inputAccessorFunction => {
 
   return obs$ => obs$.pipe(
     map(accessorFunction),
-    switchMap(extension => Observable.create(observer => {
+    switchMap(config => Observable.create(observer => {
       // Define output of zip file
-      const outputDir = './dist'
+      const outputDir = config.output
       // Define inupt directory to be zipped
-      const inputDir = `${outputDir}/${extension}`
+      const inputDir = `${outputDir}/${config.extension}`
 
       zipdir(
         inputDir,
-        { saveTo: `${outputDir}/${extension}.zip` },
+        { saveTo: `${outputDir}/${config.extension}.zip` },
         (err, buffer) => {
           observer.next('zipped')
           if(err !== null) observer.error(err)

@@ -1,6 +1,6 @@
-const fs = require('fs-extra')
+import fs from 'fs-extra'
 import { Observable } from 'rxjs'
-import { map, switchMap } from 'rxjs/operators'
+import { map, switchMap, tap } from 'rxjs/operators'
 
 export default (inputAccessorFunction) => {
   let accessorFunction
@@ -10,10 +10,10 @@ export default (inputAccessorFunction) => {
 
   return obs$ => obs$.pipe(
     map(accessorFunction),
-    switchMap(extension => Observable.create(observer => {
+    switchMap(config => Observable.create(observer => {
       const copyQext = fs.copy(
-        `./src/${extension}.qext`, 
-        `./dist/${extension}/${extension}.qext`
+        config.compile.qext,
+        `./dist/${config.extension}/${config.extension}.qext`
       )
   
       copyQext.then(() => {
@@ -21,6 +21,7 @@ export default (inputAccessorFunction) => {
         observer.complete()
       })
       .catch(err => observer.error(err))
-    }))
+    })),
+    tap(qextStatus => console.log(`${qextStatus}\n`))
   )
 }
