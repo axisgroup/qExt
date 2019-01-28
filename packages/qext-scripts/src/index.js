@@ -49,7 +49,8 @@ const authenticate$ = qextConfig$.pipe(
 
     /* else, skip authentication */
     of('skipping authentication')
-  ))
+  )),
+  share(1)
 )
 
 
@@ -91,7 +92,12 @@ const copySource$ = removeDist$.pipe(
 
 
 /* Define Webpack */
-const webpack$ = qextConfig$.pipe(
+const webpack$ = combineLatest(
+  copyQext$,
+  copyStatic$
+).pipe(
+  withLatestFrom(qextConfig$),
+  pluck(1),
   filter(config => config.mode === 'compile'),
   defineWebpack(),
   share(1)
@@ -107,11 +113,7 @@ const build$ = webpack$.pipe(
 
 /* Distribute */
 const dist$ = merge(
-  combineLatest(
-    copyStatic$,
-    copyQext$,
-    build$
-  ),
+  build$,
   copySource$
 )
 

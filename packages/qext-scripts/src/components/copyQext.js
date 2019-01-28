@@ -20,7 +20,7 @@ export default (inputAccessorFunction) => {
         observer.next('qext copied')
         observer.complete()
       })
-      .catch(err => observer.error(err))
+      .catch(err => observer.error(`${config.compile.qext} not found\n`))
     })),
     tap(qextStatus => console.log(`${qextStatus}\n`))
   )

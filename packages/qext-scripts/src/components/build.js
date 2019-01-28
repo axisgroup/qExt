@@ -10,6 +10,7 @@ export default ({ inputAccessorFunction, watch }) => {
   return obs$ => obs$.pipe(
     map(accessorFunction),
     switchMap(([compiler, config]) => Observable.create(observer => {
+      console.log(`building ${config.extension}...\n`)
       /* Watch */
       if(config.compile.watch) {
         compiler.watch({}, (err, stats) => {

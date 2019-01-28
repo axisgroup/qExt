@@ -1,4 +1,4 @@
-import { copy, stat } from 'fs-extra'
+import { readdir, copy, stat } from 'fs-extra'
 import { Observable } from 'rxjs'
 import { map, switchMap, tap } from 'rxjs/operators'
 
@@ -11,16 +11,18 @@ export default inputAccessorFunction => {
   return extension$ => extension$.pipe(
     map(accessorFunction),
     switchMap(config => Observable.create(observer => {
-      const qextFileExists = stat(`${config.vanilla.entry}/*qext`)
+      const qextFileExists = readdir(`${process.cwd()}/src`)
+        .then(files => {
+          const qextFiles = files.filter(file => file.indexOf('.qext') > -1)
 
-      qextFileExists.then((err, stats) => {
-        console.log(err, stats)
-      })
-
-      const copySrc = copy(
+          if(qextFiles.length === 1) return true
+          else observer.error(`qext file not found in ${config.vanilla.entry}\n`)
+        })
+        
+      const copySrc = qextFileExists.then(() => copy(
         `${config.vanilla.entry}`,
         `${config.output}/${config.extension}`
-      )
+      ))
 
       copySrc
         .then(() => {
