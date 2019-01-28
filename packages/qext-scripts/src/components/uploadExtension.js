@@ -1,5 +1,5 @@
 import { Observable } from "rxjs";
-import { map, switchMap } from "rxjs/operators";
+import { map, switchMap, tap } from "rxjs/operators";
 import http from 'http'
 import fs from 'fs-extra'
 
@@ -109,5 +109,6 @@ export default inputAccessorFunction => {
         request.end()
       })
     })),
+    tap(uplodStatus => console.log(`uploaded\n`))
   )
 }

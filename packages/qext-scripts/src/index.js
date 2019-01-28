@@ -140,6 +140,6 @@ const upload$ = zip$.pipe(
 
 
 upload$.subscribe(
-  console.log,
+  () => {},
   err => console.error(err)
 )
