@@ -1,22 +1,20 @@
-import { stat, readJson } from 'fs-extra'
-import { 
-  from, 
-  Subject, 
-  combineLatest, 
-  of, 
-  iif, 
-  merge 
+import {
+  Subject,
+  combineLatest,
+  of,
+  iif,
+  merge
 } from 'rxjs'
-import { 
-  withLatestFrom, 
-  share, 
-  switchMap, 
-  mergeMap, 
-  filter, 
-  pluck 
+import {
+  withLatestFrom,
+  share,
+  mergeMap,
+  filter,
+  pluck
 } from 'rxjs/operators'
 
 import { 
+  qextConfig,
   deleteDist,
   copyQext, 
   copyStatic, 
@@ -31,8 +29,8 @@ import {
 /* Get Config */
 const configFile = './qext.config.json'
 
-const qextConfig$ = from(stat(configFile)).pipe(
-  switchMap(() => from(readJson(configFile))),
+const qextConfig$ = of(configFile).pipe(
+  qextConfig(),
   share(1)
 )
 
@@ -141,5 +139,5 @@ const upload$ = zip$.pipe(
 
 upload$.subscribe(
   console.log,
-  console.log
+  err => console.error(err)
 )

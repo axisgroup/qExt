@@ -1,3 +1,4 @@
+import qextConfig from './qextConfig'
 import deleteDist from './deleteDist'
 import copyQext from './copyQext'
 import copyStatic from './copyStatic'
@@ -9,6 +10,7 @@ import uploadExtension from './uploadExtension'
 import authenticate from './authenticate'
 
 export {
+  qextConfig,
   deleteDist,
   copyQext,
   copyStatic,

@@ -1,0 +1,19 @@
+{
+  "extension": "test-extension",
+  "mode": "vanilla",
+  "deploy": true,
+  "serverConfig": {
+    "host": "172.16.84.102",
+    "isSecure": false
+  },
+  "vanilla": {
+    "entry": "./src"
+  },
+  "compile": {
+    "watch": false,
+    "entry": "./src/index.js",
+    "qext": "./src/index.qext",
+    "static": "./static"
+  },
+  "output": "./dist"
+}

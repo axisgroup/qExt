@@ -18,6 +18,6 @@ export default inputAccessorFunction => {
         observer.complete()
       })
     })),
-    tap(distStatus => console.log(`${distStatus}\n`)),
+    tap(distStatus => console.log(`\n${distStatus}\n`)),
   )
 }
