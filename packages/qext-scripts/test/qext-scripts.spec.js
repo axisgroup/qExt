@@ -83,7 +83,7 @@ describe('qExt Scripts', function() {
       })
     })
 
-    after('Cleanup TestDirectory', () => {
+    after('Cleanup TestDirectory dist', () => {
       return new Promise(resolve => {
         fs.remove(`${testDirectory}/dist`).then(() => {
           vanillaDone$.next(true)
@@ -149,6 +149,19 @@ describe('qExt Scripts', function() {
 
     it('should have a zipped up project file', done => {
       fs.stat(`${testDirectory}/dist/${extensionName}.zip`).then(() => { done() })
+    })
+
+    after('Cleanup TestDirectory dist', () => {
+      return new Promise(resolve => {
+        fs.remove(`${testDirectory}/dist`).then(() => { resolve() })
+      })
+    })
+  })
+
+
+  after('Cleanup TestDirectory', () => {
+    return new Promise(resolve => {
+      fs.remove(`${testDirectory}`).then(() => { resolve() })
     })
   })
 })
