@@ -1,7 +1,7 @@
 {
   "extension": "test-extension",
   "mode": "vanilla",
-  "deploy": true,
+  "deploy": false,
   "serverConfig": {
     "host": "172.16.84.102",
     "isSecure": false

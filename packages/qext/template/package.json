@@ -1,0 +1,15 @@
+{
+  "name": "test-extension",
+  "version": "1.0.0-alpha.3",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "qext-scripts": "qext-scripts"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "qext-scripts": "file:../../qext-scripts-1.0.0-alpha.2.tgz"
+  }
+}
