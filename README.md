@@ -22,7 +22,7 @@ qExt makes use of the Qlik Sense QRS APIs. In order to delete and post extension
 ### Server
 1. Run `qext --create-extension [name] --install` to create a new extension project in your working directory and install all dependencies
 2. Once installation completes, change your working directory to the project directory that was just created
-3. Update `server.host`/`server.port` property values to the hostname/port of your Sense Server. If you Sense Server is running on port 80, leave as `null`
+3. Update `server.host`/`server.port` property values to the hostname/port of your Sense Server. If your Sense Server is running on port 80, leave as `null`
 4. Update the `server.headers.hdr-usr` property value to the domain and username of a Qlik Sense admin account
 5. Run `npm run watch-webpack-deploy-server` to start watching and deploying your source files every time an edit is made
 
