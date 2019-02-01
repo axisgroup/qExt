@@ -11,7 +11,7 @@ module.exports = function(extensionName, serverConfig) {
     var options = {
       "method": "POST",
       "hostname": serverConfig.host,
-      "port": null,
+      "port": serverConfig.port,
       "path": "hdr/qrs/extension/upload?Xrfkey=123456789ABCDEFG",
       "headers": {
         "x-qlik-xrfkey": "123456789ABCDEFG",
