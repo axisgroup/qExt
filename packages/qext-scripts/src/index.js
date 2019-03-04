@@ -42,10 +42,10 @@ const cookieJar$ = new Subject()
 const authenticate$ = qextConfig$.pipe(
   mergeMap(config => iif(
     /* if deploying.. */
-    () => config.deploy,
+    () => config.authenticate === 'windows',
 
     /* authenticate */
-    authenticate(cookieJar$),
+    authenticate(config, cookieJar$),
 
     /* else, skip authentication */
     of('skipping authentication')
@@ -130,7 +130,7 @@ const zip$ = dist$.pipe(
 const upload$ = zip$.pipe(
   withLatestFrom(qextConfig$),
   pluck(1),
-  filter(config => config.deploy),
+  filter(config => config.deploy === "server"),
   withLatestFrom(cookieJar$),
   uploadExtension(([config, cookie]) => ({
     config,
@@ -138,8 +138,23 @@ const upload$ = zip$.pipe(
   }))
 )
 
+/* Deploy */
+/* Ship to desktop extension location if
+    config.deploy === "desktop" */
+const deployToDesktop$ = dist$.pipe(
+  withLatestFrom(qextConfig$),
+  pluck(1),
+  filter(config => config.deploy === "desktop"),
+  deployToDesktop()
+)
 
-upload$.subscribe(
+merge(upload$, deployToDesktop$).subscribe(
   () => {},
   err => console.error(err)
 )
+
+
+// upload$.subscribe(
+//   () => {},
+//   err => console.error(err)
+// )

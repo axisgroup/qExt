@@ -1,10 +1,17 @@
 {
   "extension": "test-extension",
   "mode": "vanilla",
-  "deploy": false,
+  "deploy": "server",
+  "authenticate": "none",
   "serverConfig": {
     "host": "172.16.84.102",
-    "isSecure": false
+    "port": null,
+    "isSecure": true,
+    "hdr-usr" :"WIN-MOMDUND9RTR\\administrator",
+    "prefix": "hdr"
+  },
+  "desktopConfig": {
+    "destination": "C:\\Users\\%username%\\Documents\\Qlik\\Sense\\Extensions"
   },
   "vanilla": {
     "entry": "./src"
