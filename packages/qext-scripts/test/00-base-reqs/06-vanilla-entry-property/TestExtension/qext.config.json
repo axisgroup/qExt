@@ -1,0 +1,6 @@
+{
+	"extension": "test-extension",
+	"output": "./dist",
+	"mode": "vanilla",
+	"vanilla": {}
+}
