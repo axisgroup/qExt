@@ -1,0 +1,4 @@
+{
+	"extension": "test-extension",
+	"output": "./dist"
+}

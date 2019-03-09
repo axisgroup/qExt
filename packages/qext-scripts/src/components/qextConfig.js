@@ -1,29 +1,57 @@
-import { stat, readJson } from 'fs-extra';
-import { Observable } from 'rxjs'
-import { map, switchMap, tap } from 'rxjs/operators'
+import { stat, readJson } from "fs-extra"
+import { Observable } from "rxjs"
+import { map, switchMap, tap } from "rxjs/operators"
 
 export default inputAccessorFunction => {
-  let accessorFunction
+	let accessorFunction
 
-  if(inputAccessorFunction) accessorFunction = inputAccessorFunction
-  else accessorFunction = a => a
+	if (inputAccessorFunction) accessorFunction = inputAccessorFunction
+	else accessorFunction = a => a
 
-  return extension$ => extension$.pipe(
-    map(accessorFunction),
-    switchMap(configFile => Observable.create(observer => {
-      const getConfigFile = stat(configFile)
+	return extension$ =>
+		extension$.pipe(
+			map(accessorFunction),
+			switchMap(configFile =>
+				Observable.create(observer => {
+					const getConfigFile = stat(configFile)
 
-      const configFileExists = getConfigFile
-        .then(() => readJson(configFile))
-        .catch(err => observer.error(`${configFile} not found`))
+					const configFileExists = getConfigFile
+						.then(() => readJson(configFile))
+						.catch(err => observer.error(`${configFile} not found`))
 
-      configFileExists
-        .then(config => {
-          observer.next(config)
-          observer.complete()
-        })
-        .catch(err => observer.error(`${configFile} cannot be read`))
-
-    }))
-  )
+					configFileExists
+						.then(config => {
+							/** extension property not defined */
+							if (config.extension === undefined)
+								observer.error(
+									`extension property not defined in ${configFile}`
+								)
+							/** output property not defined */ else if (
+								config.output === undefined
+							)
+								observer.error(`output property not defined in ${configFile}`)
+							/** mode property not defined */ else if (
+								config.mode === undefined
+							)
+								observer.error(`mode property not defined in ${configFile}`)
+							/** mode value not vanilla or compile */ else if (
+								["vanilla", "compile"].indexOf(config.mode) === -1
+							)
+								observer.error(
+									`mode value must be set to "vanilla" or "compile"`
+								)
+							/** vanilla property not defined when mode: vanilla */ else if (
+								config.mode === "vanilla" &&
+								config.vanilla === undefined
+							)
+								observer.error(`vanilla property not defined in ${configFile}`)
+							/** pass */ else {
+								observer.next(config)
+								observer.complete()
+							}
+						})
+						.catch(err => observer.error(`${configFile} cannot be read`))
+				})
+			)
+		)
 }
