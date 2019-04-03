@@ -16,12 +16,17 @@ describe("01. Copy source directory", function() {
 				`${testExtensionDir}/dist/${extensionName}`
 			)
 
-			Promise.all([srcDirectory, distDirectory]).then(
+			const sourceCopy = Promise.all([srcDirectory, distDirectory]).then(
 				([srcDirectory, distDirectory]) => {
-					distDirectory.should.deep.equal(srcDirectory)
-					done()
+					return distDirectory.should.deep.equal(srcDirectory)
 				}
 			)
+
+			const zipFile = fs.stat(`${testExtensionDir}/dist/${extensionName}.zip`)
+
+			Promise.all([sourceCopy, zipFile]).then(() => {
+				done()
+			})
 		})
 	})
 })
