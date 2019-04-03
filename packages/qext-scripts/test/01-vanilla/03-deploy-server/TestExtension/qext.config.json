@@ -1,0 +1,17 @@
+{
+	"extension": "test-extension",
+	"output": "./dist",
+	"mode": "vanilla",
+	"vanilla": {
+		"entry": "./src"
+	},
+	"deploy": "server",
+	"authenticate": "header",
+	"serverConfig": {
+		"host": "172.16.84.100",
+		"port": null,
+		"isSecure": false,
+		"hdr-usr": "WIN-CCFMMB3B5Q2\\administrator",
+		"prefix": "hdr"
+	}
+}

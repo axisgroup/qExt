@@ -1,4 +1,4 @@
-import { Subject, combineLatest, of, iif, merge } from "rxjs"
+import { Subject, combineLatest, of, iif, merge, BehaviorSubject } from "rxjs"
 import {
 	withLatestFrom,
 	share,
@@ -31,7 +31,7 @@ const qextConfig$ = of(configFile).pipe(
 )
 
 /* Cookie Jar */
-const cookieJar$ = new Subject()
+const cookieJar$ = new BehaviorSubject(null)
 
 /* Initialize authentication */
 const authenticate$ = qextConfig$.pipe(
