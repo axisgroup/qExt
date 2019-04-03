@@ -6,7 +6,7 @@ const execQextScripts = require("../../util/exec-qext-scripts")
 const testExtensionDir = path.resolve(__dirname, "./TestExtension")
 const extensionName = "test-extension"
 
-describe("11. Server Config authenticate property", function() {
+describe("11. Server authenticate property", function() {
 	this.timeout(10000)
 
 	it("should fail if authenticate is not defined", done => {
