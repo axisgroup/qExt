@@ -3,7 +3,7 @@ const path = require("path")
 const execQextScripts = require("../../util/exec-qext-scripts")
 const testExtensionDir = path.resolve(__dirname, "./TestExtension")
 
-describe("No extension property in qext.config.json object", function() {
+describe("01. No extension property in qext.config.json object", function() {
 	this.timeout(10000)
 
 	it("should fail when extension property is not defined", done => {

@@ -3,7 +3,7 @@ const path = require("path")
 const execQextScripts = require("../../util/exec-qext-scripts")
 const testExtensionDir = path.resolve(__dirname, "./TestExtension")
 
-describe("No mode property in qext.config.json object", function() {
+describe("03. No mode property in qext.config.json object", function() {
 	this.timeout(10000)
 
 	it("should fail when mode property is not defined", done => {

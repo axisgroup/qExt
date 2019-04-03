@@ -3,7 +3,7 @@ const path = require("path")
 const execQextScripts = require("../../util/exec-qext-scripts")
 const testExtensionDir = path.resolve(__dirname, "./TestExtension")
 
-describe('Mode value not set to "vanilla" or "compile"', function() {
+describe('04. Mode value not set to "vanilla" or "compile"', function() {
 	this.timeout(10000)
 
 	it('should fail when mode value not set to "vanilla" or "compile"', done => {
