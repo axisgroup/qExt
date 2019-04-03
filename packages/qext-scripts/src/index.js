@@ -11,7 +11,7 @@ import {
 	build,
 	zip,
 	uploadExtension,
-	authenticate
+	authenticate,
 } from "./components/component-exports"
 
 /* Get Config */
@@ -108,7 +108,7 @@ const upload$ = zip$.pipe(
 	withLatestFrom(cookieJar$),
 	uploadExtension(([config, cookie]) => ({
 		config,
-		cookie
+		cookie,
 	}))
 )
 
