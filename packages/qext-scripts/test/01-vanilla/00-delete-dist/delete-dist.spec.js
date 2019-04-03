@@ -4,7 +4,7 @@ const fs = require("fs-extra")
 const execQextScripts = require("../../util/exec-qext-scripts")
 const testExtensionDir = path.resolve(__dirname, "./TestExtension")
 
-describe("Delete output directory", function() {
+describe("00. Delete output directory", function() {
 	this.timeout(10000)
 
 	before("creating output directory", () => {
