@@ -1,0 +1,12 @@
+{
+	"extension": "test-extension",
+	"output": "./dist",
+	"mode": "vanilla",
+	"vanilla": {
+		"entry": "./src"
+	},
+	"deploy": "desktop",
+	"desktopConfig": {
+		"destination": "/Users/johnbellizzi/Documents/Qlik/Sense/Extensions"
+	}
+}
