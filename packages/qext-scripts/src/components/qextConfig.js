@@ -47,6 +47,22 @@ export default inputAccessorFunction => {
 								// vanilla-entry property not defined
 								else if (config.vanilla.entry === undefined)
 									observer.error(`entry property not defined in "vanilla"`)
+								// Deploy Desktop
+								else if (config.deploy === "desktop") {
+									// desktopConfig not defined
+									if (config.desktopConfig === undefined)
+										observer.error(
+											`desktopConfig property not defined in ${configFile}`
+										)
+									// desktopConfig-destination property not defined
+									else if (config.desktopConfig.destination === undefined)
+										observer.error(`destination not defined in "desktopConfig"`)
+									// pass
+									else {
+										observer.next(config)
+										observer.complete()
+									}
+								}
 								// pass
 								else {
 									observer.next(config)

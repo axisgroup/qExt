@@ -11,6 +11,8 @@ describe("01. Copy source directory", function() {
 
 	it("should copy source directory into output", done => {
 		execQextScripts(testExtensionDir, (error, stdout, stderr) => {
+			console.log(stdout)
+			console.log(stderr)
 			const srcDirectory = fs.readdir(`${testExtensionDir}/src`)
 			const distDirectory = fs.readdir(
 				`${testExtensionDir}/dist/${extensionName}`
@@ -18,15 +20,17 @@ describe("01. Copy source directory", function() {
 
 			const sourceCopy = Promise.all([srcDirectory, distDirectory]).then(
 				([srcDirectory, distDirectory]) => {
-					return distDirectory.should.deep.equal(srcDirectory)
+					// return distDirectory.should.deep.equal(srcDirectory)
+					distDirectory.should.deep.equal(srcDirectory)
+					done()
 				}
 			)
 
-			const zipFile = fs.stat(`${testExtensionDir}/dist/${extensionName}.zip`)
+			// const zipFile = fs.stat(`${testExtensionDir}/dist/${extensionName}.zip`)
 
-			Promise.all([sourceCopy, zipFile]).then(() => {
-				done()
-			})
+			// Promise.all([sourceCopy, zipFile]).then(() => {
+			// 	done()
+			// })
 		})
 	})
 })

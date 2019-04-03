@@ -1,5 +1,12 @@
 import { Subject, combineLatest, of, iif, merge } from "rxjs"
-import { withLatestFrom, share, mergeMap, filter, pluck } from "rxjs/operators"
+import {
+	withLatestFrom,
+	share,
+	mergeMap,
+	filter,
+	pluck,
+	tap,
+} from "rxjs/operators"
 
 import {
 	qextConfig,
@@ -13,6 +20,7 @@ import {
 	uploadExtension,
 	authenticate,
 } from "./components/component-exports"
+import deployToDesktop from "./components/deployToDesktop"
 
 /* Get Config */
 const configFile = "./qext.config.json"
@@ -91,7 +99,7 @@ const build$ = webpack$.pipe(
 )
 
 /* Distribute */
-const dist$ = merge(build$, copySource$)
+const dist$ = merge(build$, copySource$).pipe(share(1))
 
 /* Zip */
 const zip$ = dist$.pipe(
@@ -105,6 +113,7 @@ const upload$ = zip$.pipe(
 	withLatestFrom(qextConfig$),
 	pluck(1),
 	filter(config => config.deploy === "server"),
+	tap(console.log),
 	withLatestFrom(cookieJar$),
 	uploadExtension(([config, cookie]) => ({
 		config,
@@ -113,18 +122,13 @@ const upload$ = zip$.pipe(
 )
 
 /* Deploy */
-// /* Ship to desktop extension location if
-//     config.deploy === "desktop" */
-// const deployToDesktop$ = dist$.pipe(
-//   withLatestFrom(qextConfig$),
-//   pluck(1),
-//   filter(config => config.deploy === "desktop"),
-//   deployToDesktop()
-// )
+const deployToDesktop$ = dist$.pipe(
+	withLatestFrom(qextConfig$),
+	pluck(1),
+	filter(config => config.deploy === "desktop"),
+	deployToDesktop()
+)
 
-// merge(upload$, deployToDesktop$).subscribe(
-//   () => {},
-//   err => console.error(err)
-// )
+merge(upload$, deployToDesktop$).subscribe(() => {}, err => console.error(err))
 
-upload$.subscribe(() => {}, err => console.error(err))
+// upload$.subscribe(() => {}, err => console.error(err))
