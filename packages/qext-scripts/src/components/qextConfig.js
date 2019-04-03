@@ -26,29 +26,32 @@ export default inputAccessorFunction => {
 								observer.error(
 									`extension property not defined in ${configFile}`
 								)
-							// output property not defined
-							else if (config.output === undefined)
-								observer.error(`output property not defined in ${configFile}`)
-							// mode property not defined
-							else if (config.mode === undefined)
-								observer.error(`mode property not defined in ${configFile}`)
-							// mode value not vanilla or compile
-							else if (["vanilla", "compile"].indexOf(config.mode) === -1)
-								observer.error(
-									`mode value must be set to "vanilla" or "compile"`
-								)
-							// Vanilla mode
-							else if (config.mode === "vanilla") {
-								// vanilla property not defined
-								if (config.vanilla === undefined)
+							else {
+								// output property not defined
+								if (config.output === undefined)
+									observer.error(`output property not defined in ${configFile}`)
+								// mode property not defined
+								else if (config.mode === undefined)
+									observer.error(`mode property not defined in ${configFile}`)
+								// mode value not vanilla or compile
+								else if (["vanilla", "compile"].indexOf(config.mode) === -1)
 									observer.error(
-										`vanilla property not defined in ${configFile}`
+										`mode value must be set to "vanilla" or "compile"`
 									)
-								// vanilla-entry property not defined
-								else if (config.vanilla.entry === undefined)
-									observer.error(`entry property not defined in "vanilla"`)
+								// Vanilla mode
+								else if (config.mode === "vanilla") {
+									// vanilla property not defined
+									if (config.vanilla === undefined)
+										observer.error(
+											`vanilla property not defined in ${configFile}`
+										)
+									// vanilla-entry property not defined
+									else if (config.vanilla.entry === undefined)
+										observer.error(`entry property not defined in "vanilla"`)
+								}
+
 								// Deploy Desktop
-								else if (config.deploy === "desktop") {
+								if (config.deploy === "desktop") {
 									// desktopConfig not defined
 									if (config.desktopConfig === undefined)
 										observer.error(
@@ -57,23 +60,48 @@ export default inputAccessorFunction => {
 									// desktopConfig-destination property not defined
 									else if (config.desktopConfig.destination === undefined)
 										observer.error(`destination not defined in "desktopConfig"`)
-									// pass
+								}
+
+								// Deploy Server
+								if (config.deploy === "server") {
+									// serverConfig not defined
+									if (config.serverConfig === undefined)
+										observer.error(
+											`serverConfig property not defined in ${configFile}`
+										)
+									// authenticate not defined
+									else if (config.authenticate === undefined)
+										observer.error(
+											`authenticate property not defined in ${configFile}`
+										)
 									else {
-										observer.next(config)
-										observer.complete()
+										// Header Authentication
+										if (config.authenticate === "header") {
+											// host not defined
+											if (config.serverConfig.host === undefined)
+												observer.error(
+													`host property not defined in serverConfig`
+												)
+											// hdr-usr not defined
+											else if (config.serverConfig["hdr-usr"] === undefined)
+												observer.error(
+													`hdr-usr property not defined in serverConfig`
+												)
+										}
+										// Windows Authentication
+										if (config.authenticate === "windows") {
+											// host not defined
+											if (config.serverConfig.host === undefined)
+												observer.error(
+													`host property not defined in serverConfig`
+												)
+										}
 									}
 								}
-								// pass
-								else {
-									observer.next(config)
-									observer.complete()
-								}
 							}
-							// pass
-							else {
-								observer.next(config)
-								observer.complete()
-							}
+
+							observer.next(config)
+							observer.complete()
 						})
 						.catch(err => observer.error(`${configFile} cannot be read`))
 				})

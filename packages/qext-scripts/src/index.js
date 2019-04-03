@@ -113,7 +113,6 @@ const upload$ = zip$.pipe(
 	withLatestFrom(qextConfig$),
 	pluck(1),
 	filter(config => config.deploy === "server"),
-	tap(console.log),
 	withLatestFrom(cookieJar$),
 	uploadExtension(([config, cookie]) => ({
 		config,

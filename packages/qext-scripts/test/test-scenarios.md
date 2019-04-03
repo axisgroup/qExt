@@ -18,14 +18,26 @@ This section defines the configuration of the `qext.config.json` file
 
 ### `vanilla`
 
-| Property | Type   | Reqiured | Default | Description                        |
-| -------- | ------ | -------- | ------- | ---------------------------------- |
-| `entry`  | String | Required | Yes     | Entry file for webpack compilation |
+| Property | Type   | Reqiured | Description                        |
+| -------- | ------ | -------- | ---------------------------------- |
+| `entry`  | String | Yes      | Entry file for webpack compilation |
 
 </br>
 
 ### `desktopConfig`
 
-| Property      | Type   | Reqiured | Default | Description                             |
-| ------------- | ------ | -------- | ------- | --------------------------------------- |
-| `destination` | String | Required | Yes     | Directory location to deploy on desktop |
+| Property      | Type   | Reqiured | Description                             |
+| ------------- | ------ | -------- | --------------------------------------- |
+| `destination` | String | Yes      | Directory location to deploy on desktop |
+
+</br>
+
+### `serverConfig`
+
+| Property   | Type   | Reqiured                  | Description                             |
+| ---------- | ------ | ------------------------- | --------------------------------------- |
+| `host`     | String | Yes                       | Directory location to deploy on desktop |
+| `port`     | Number | No                        | Port number of endpoint                 |
+| `isSecure` | Bool   | No                        | Connection should be over http or https |
+| `hdr-usr`  | String | authenticate === "header" | Directory location to deploy on desktop |
+| `prefix`   | String | No                        | Prefix for virtual proxy                |
