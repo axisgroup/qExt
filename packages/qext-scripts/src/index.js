@@ -49,6 +49,14 @@ const removeDist$ = authenticate$.pipe(
 	share(1)
 )
 
+/* Copy Source */
+const copySource$ = removeDist$.pipe(
+	withLatestFrom(qextConfig$),
+	pluck(1),
+	filter(config => config.mode === "vanilla"),
+	copySrc()
+)
+
 /* Copy qext file */
 const copyQext$ = removeDist$.pipe(
 	withLatestFrom(qextConfig$),
@@ -65,14 +73,6 @@ const copyStatic$ = removeDist$.pipe(
 	/* Only copy static directory if compiling */
 	filter(config => config.mode === "compile"),
 	copyStatic()
-)
-
-/* Copy Source */
-const copySource$ = removeDist$.pipe(
-	withLatestFrom(qextConfig$),
-	pluck(1),
-	filter(config => config.mode === "vanilla"),
-	copySrc()
 )
 
 /* Define Webpack */
