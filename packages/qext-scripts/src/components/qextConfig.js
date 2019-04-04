@@ -26,6 +26,7 @@ export default inputAccessorFunction => {
 								observer.error(
 									`extension property not defined in ${configFile}`
 								)
+							// Property defined
 							else {
 								// output property not defined
 								if (config.output === undefined)
@@ -61,9 +62,8 @@ export default inputAccessorFunction => {
 									else if (config.desktopConfig.destination === undefined)
 										observer.error(`destination not defined in "desktopConfig"`)
 								}
-
 								// Deploy Server
-								if (config.deploy === "server") {
+								else if (config.deploy === "server") {
 									// serverConfig not defined
 									if (config.serverConfig === undefined)
 										observer.error(
