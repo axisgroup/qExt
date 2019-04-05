@@ -50,6 +50,23 @@ export default inputAccessorFunction => {
 									else if (config.vanilla.entry === undefined)
 										observer.error(`entry property not defined in "vanilla"`)
 								}
+								// Compile mode
+								else if (config.mode === "compile") {
+									// compile property not defined
+									if (config.compile === undefined)
+										observer.error(
+											`compile property not defined in ${configFile}`
+										)
+									// compile-entry property not defined
+									else if (config.compile.entry === undefined)
+										observer.error(`entry property not defined in "compile"`)
+									// compile-qext property not defined
+									else if (config.compile.qext === undefined)
+										observer.error(`qext property not defined in "compile"`)
+									// compile-static property not defined
+									else if (config.compile.static === undefined)
+										observer.error(`static property not defined in "compile"`)
+								}
 
 								// Deploy Desktop
 								if (config.deploy === "desktop") {
