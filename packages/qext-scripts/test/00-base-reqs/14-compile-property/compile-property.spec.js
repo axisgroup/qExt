@@ -6,12 +6,14 @@ const execQextScripts = require("../../util/exec-qext-scripts")
 const testExtensionDir = path.resolve(__dirname, "./TestExtension")
 const extensionName = "test-extension"
 
-describe("13. Server Header hdr-usr property", function() {
+describe("14. Compile property not set", function() {
 	this.timeout(10000)
 
-	it("should fail if hdr-usr is not defined in serverConfig", done => {
+	it("should fail if compile property is not defined", done => {
 		execQextScripts(testExtensionDir, (error, stdout, stderr) => {
-			stderr.should.equal(`hdr-usr property not defined in serverConfig\n`)
+			stderr.should.equal(
+				`compile property not defined in ./qext.config.json\n`
+			)
 			done()
 		})
 	})
