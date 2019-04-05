@@ -18,9 +18,9 @@ This section defines the configuration of the `qext.config.json` file
 
 ### `vanilla`
 
-| Property | Type   | Reqiured | Description                        |
-| -------- | ------ | -------- | ---------------------------------- |
-| `entry`  | String | Yes      | Entry file for webpack compilation |
+| Property | Type   | Reqiured | Description                             |
+| -------- | ------ | -------- | --------------------------------------- |
+| `entry`  | String | Yes      | Directory to be copied over into output |
 
 </br>
 
@@ -42,3 +42,14 @@ This section defines the configuration of the `qext.config.json` file
 | `allowSelfSignedCertificate` | Bool   | No                        | Allow rejectUnauthorized set to true in http requests |
 | `hdr-usr`                    | String | authenticate === "header" | Directory location to deploy on desktop               |
 | `prefix`                     | String | No                        | Prefix for virtual proxy                              |
+
+</br>
+
+### `compile`
+
+| Property | Type   | Reqiured | Description                                                     |
+| -------- | ------ | -------- | --------------------------------------------------------------- |
+| `entry`  | String | Yes      | Entry file for webpack compilation                              |
+| `qext`   | String | Yes      | Location of qext file                                           |
+| `static` | String | Yes      | Location of static directory                                    |
+| `watch`  | Bool   | No       | If set to true, webpack will watch the source files for changes |
