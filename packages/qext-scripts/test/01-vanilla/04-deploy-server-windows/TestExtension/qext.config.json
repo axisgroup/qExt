@@ -6,13 +6,14 @@
 		"entry": "./src"
 	},
 	"deploy": "server",
-	"authenticate": "header",
+	"authenticate": "windows",
 	"serverConfig": {
 		"host": "172.16.84.100",
 		"port": null,
 		"isSecure": true,
-		"allowSelfSignedCertificate": true,
 		"hdr-usr": "WIN-CCFMMB3B5Q2\\administrator",
-		"prefix": "hdr"
+		"prefix": "",
+		"user": "administrator",
+		"password": "P@ssP@ss"
 	}
 }

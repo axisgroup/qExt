@@ -8,7 +8,7 @@ const httpSecure = require("https")
 const testExtensionDir = path.resolve(__dirname, "./TestExtension")
 const extensionName = "test-extension"
 
-describe("03. Deploy to server", function() {
+describe("04. Deploy to server windows auth", function() {
 	this.timeout(10000)
 
 	it("should deploy extension file to server", done => {
@@ -33,8 +33,8 @@ describe("03. Deploy to server", function() {
 
 				const options = {
 					method: "GET",
-					host: config.serverConfig.host,
 					rejectUnauthorized: false,
+					host: config.serverConfig.host,
 					port: config.serverConfig.port ? config.serverConfig.port : null,
 					headers,
 					path: `${prefix}/qrs/extension/schema?xrfkey=123456789abcdefg`,

@@ -34,10 +34,11 @@ This section defines the configuration of the `qext.config.json` file
 
 ### `serverConfig`
 
-| Property   | Type   | Reqiured                  | Description                             |
-| ---------- | ------ | ------------------------- | --------------------------------------- |
-| `host`     | String | Yes                       | Directory location to deploy on desktop |
-| `port`     | Number | No                        | Port number of endpoint                 |
-| `isSecure` | Bool   | No                        | Connection should be over http or https |
-| `hdr-usr`  | String | authenticate === "header" | Directory location to deploy on desktop |
-| `prefix`   | String | No                        | Prefix for virtual proxy                |
+| Property                     | Type   | Reqiured                  | Description                                           |
+| ---------------------------- | ------ | ------------------------- | ----------------------------------------------------- |
+| `host`                       | String | Yes                       | Directory location to deploy on desktop               |
+| `port`                       | Number | No                        | Port number of endpoint                               |
+| `isSecure`                   | Bool   | No                        | Connection should be over http or https               |
+| `allowSelfSignedCertificate` | Bool   | No                        | Allow rejectUnauthorized set to true in http requests |
+| `hdr-usr`                    | String | authenticate === "header" | Directory location to deploy on desktop               |
+| `prefix`                     | String | No                        | Prefix for virtual proxy                              |

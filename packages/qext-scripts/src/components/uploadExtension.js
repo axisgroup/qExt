@@ -40,6 +40,10 @@ export default inputAccessorFunction => {
 
 					const options = {
 						method: "DELETE",
+						rejectUnauthorized:
+							config.serverConfig.allowSelfSignedCertificate === true
+								? false
+								: true,
 						host: config.serverConfig.host,
 						port: config.serverConfig.port ? config.serverConfig.port : null,
 						path: `${prefix}/qrs/extension/name/${
@@ -114,6 +118,10 @@ export default inputAccessorFunction => {
 
 					const options = {
 						method: "POST",
+						rejectUnauthorized:
+							config.serverConfig.allowSelfSignedCertificate === true
+								? false
+								: true,
 						host: config.serverConfig.host,
 						port: config.serverConfig.port ? config.serverConfig.port : null,
 						path: `${prefix}/qrs/extension/upload?xrfkey=123456789abcdefg`,
