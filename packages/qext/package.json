@@ -1,6 +1,6 @@
 {
 	"name": "qext",
-	"version": "1.0.0-alpha.1",
+	"version": "1.0.0-alpha.3",
 	"description": "",
 	"main": "index.js",
 	"scripts": {
@@ -9,20 +9,24 @@
 		"test": "mocha './test/**/*.spec.js'",
 		"test-only": "mocha"
 	},
+	"bin": {
+		"qext": "./bin/qext.js"
+	},
+	"preferGlobal": true,
 	"keywords": [],
-	"author": "",
+	"author": "John Bellizzi",
 	"license": "ISC",
 	"dependencies": {
+		"commander": "^2.20.0",
+		"fs-extra": "^7.0.1"
+	},
+	"devDependencies": {
 		"babel-core": "^6.26.3",
 		"babel-loader": "^7.1.5",
 		"babel-plugin-transform-object-rest-spread": "^6.26.0",
-		"fs-extra": "^7.0.1",
+		"chai": "^4.2.0",
+		"mocha": "^6.1.1",
 		"webpack": "^4.29.6",
 		"webpack-node-externals": "^1.7.2"
-	},
-	"devDependencies": {
-		"chai": "^4.2.0",
-		"commander": "^2.20.0",
-		"mocha": "^6.1.1"
 	}
 }
