@@ -1,5 +1,5 @@
 {
-	"extension": "test-extension",
+	"extension": "template",
 	"mode": "vanilla",
 	"output": "./dist"
 }
