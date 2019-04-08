@@ -2,6 +2,7 @@ import program from "commander"
 import fs from "fs-extra"
 import path from "path"
 import CreateExtension from "./components/create-extension"
+import InstallDependencies from "./components/install-dependencies"
 
 const packagePath = path.resolve(__dirname, "../package.json")
 
@@ -23,5 +24,7 @@ version.then(version => {
 		)
 	else {
 		CreateExtension(program.createExtension)
+
+		if (program.install) InstallDependencies(program.createExtension)
 	}
 })

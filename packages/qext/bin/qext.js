@@ -99,6 +99,18 @@ eval("__webpack_require__.r(__webpack_exports__);\n/* harmony import */ var fs_e
 
 /***/ }),
 
+/***/ "./src/components/install-dependencies.js":
+/*!************************************************!*\
+  !*** ./src/components/install-dependencies.js ***!
+  \************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony import */ var child_process__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! child_process */ \"child_process\");\n/* harmony import */ var child_process__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(child_process__WEBPACK_IMPORTED_MODULE_0__);\n\n\n/* harmony default export */ __webpack_exports__[\"default\"] = (extensionName => {\n\tchild_process__WEBPACK_IMPORTED_MODULE_0___default.a.spawn(\"npm\", [\"install\"], {\n\t\tenv: process.env,\n\t\tcwd: process.cwd() + `/${extensionName}`,\n\t\tshell: true,\n\t\tstdio: \"inherit\"\n\t});\n});\n\n//# sourceURL=webpack:///./src/components/install-dependencies.js?");
+
+/***/ }),
+
 /***/ "./src/index.js":
 /*!**********************!*\
   !*** ./src/index.js ***!
@@ -107,7 +119,7 @@ eval("__webpack_require__.r(__webpack_exports__);\n/* harmony import */ var fs_e
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-eval("__webpack_require__.r(__webpack_exports__);\n/* harmony import */ var commander__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! commander */ \"commander\");\n/* harmony import */ var commander__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(commander__WEBPACK_IMPORTED_MODULE_0__);\n/* harmony import */ var fs_extra__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! fs-extra */ \"fs-extra\");\n/* harmony import */ var fs_extra__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(fs_extra__WEBPACK_IMPORTED_MODULE_1__);\n/* harmony import */ var path__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! path */ \"path\");\n/* harmony import */ var path__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(path__WEBPACK_IMPORTED_MODULE_2__);\n/* harmony import */ var _components_create_extension__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./components/create-extension */ \"./src/components/create-extension.js\");\n\n\n\n\n\nconst packagePath = path__WEBPACK_IMPORTED_MODULE_2___default.a.resolve(__dirname, \"../package.json\");\n\nconst version = fs_extra__WEBPACK_IMPORTED_MODULE_1___default.a.readJson(packagePath).then(packageObj => packageObj.version).catch(console.error);\n\nversion.then(version => {\n\tcommander__WEBPACK_IMPORTED_MODULE_0___default.a.version(version).option(\"-c, --create-extension <name>\", \"Create New Extension\").option(\"-i, --install\", \"Install Dependencies\").parse(process.argv);\n\n\tif (!commander__WEBPACK_IMPORTED_MODULE_0___default.a.createExtension) return console.error('set \"-c, --create-extension <name>\" flag to create extension');else {\n\t\tObject(_components_create_extension__WEBPACK_IMPORTED_MODULE_3__[\"default\"])(commander__WEBPACK_IMPORTED_MODULE_0___default.a.createExtension);\n\t}\n});\n\n//# sourceURL=webpack:///./src/index.js?");
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony import */ var commander__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! commander */ \"commander\");\n/* harmony import */ var commander__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(commander__WEBPACK_IMPORTED_MODULE_0__);\n/* harmony import */ var fs_extra__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! fs-extra */ \"fs-extra\");\n/* harmony import */ var fs_extra__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(fs_extra__WEBPACK_IMPORTED_MODULE_1__);\n/* harmony import */ var path__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! path */ \"path\");\n/* harmony import */ var path__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(path__WEBPACK_IMPORTED_MODULE_2__);\n/* harmony import */ var _components_create_extension__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./components/create-extension */ \"./src/components/create-extension.js\");\n/* harmony import */ var _components_install_dependencies__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./components/install-dependencies */ \"./src/components/install-dependencies.js\");\n\n\n\n\n\n\nconst packagePath = path__WEBPACK_IMPORTED_MODULE_2___default.a.resolve(__dirname, \"../package.json\");\n\nconst version = fs_extra__WEBPACK_IMPORTED_MODULE_1___default.a.readJson(packagePath).then(packageObj => packageObj.version).catch(console.error);\n\nversion.then(version => {\n\tcommander__WEBPACK_IMPORTED_MODULE_0___default.a.version(version).option(\"-c, --create-extension <name>\", \"Create New Extension\").option(\"-i, --install\", \"Install Dependencies\").parse(process.argv);\n\n\tif (!commander__WEBPACK_IMPORTED_MODULE_0___default.a.createExtension) return console.error('set \"-c, --create-extension <name>\" flag to create extension');else {\n\t\tObject(_components_create_extension__WEBPACK_IMPORTED_MODULE_3__[\"default\"])(commander__WEBPACK_IMPORTED_MODULE_0___default.a.createExtension);\n\n\t\tif (commander__WEBPACK_IMPORTED_MODULE_0___default.a.install) Object(_components_install_dependencies__WEBPACK_IMPORTED_MODULE_4__[\"default\"])(commander__WEBPACK_IMPORTED_MODULE_0___default.a.createExtension);\n\t}\n});\n\n//# sourceURL=webpack:///./src/index.js?");
 
 /***/ }),
 
@@ -119,6 +131,17 @@ eval("__webpack_require__.r(__webpack_exports__);\n/* harmony import */ var comm
 /***/ (function(module, exports, __webpack_require__) {
 
 eval("module.exports = __webpack_require__(/*! ./src/index.js */\"./src/index.js\");\n\n\n//# sourceURL=webpack:///multi_./src/index.js?");
+
+/***/ }),
+
+/***/ "child_process":
+/*!********************************!*\
+  !*** external "child_process" ***!
+  \********************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+eval("module.exports = require(\"child_process\");\n\n//# sourceURL=webpack:///external_%22child_process%22?");
 
 /***/ }),
 
