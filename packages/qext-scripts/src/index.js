@@ -22,6 +22,10 @@ import {
 	deployToDesktop,
 } from "./components"
 
+import program from "commander"
+
+program.option("-w, --watch", "Watch").parse(process.argv)
+
 /* Get Config */
 const configFile = "./qext.config.json"
 
@@ -95,7 +99,11 @@ const webpack$ = combineLatest(copyQext$, copyStatic$).pipe(
 /* Build */
 const build$ = webpack$.pipe(
 	withLatestFrom(qextConfig$),
-	build(([webpack, config]) => ({ webpack, config }))
+	build(([webpack, config]) => ({
+		compiler: webpack,
+		config,
+		watch: program.watch,
+	}))
 )
 
 /* Distribute */
