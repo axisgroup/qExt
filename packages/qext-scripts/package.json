@@ -1,10 +1,10 @@
 {
 	"name": "qext-scripts",
-	"version": "1.0.0-alpha.4",
+	"version": "1.0.0-alpha.5",
 	"description": "",
 	"main": "index.js",
 	"bin": {
-		"qext-scripts": "./bin/index.js"
+		"qext-scripts": "./bin/qext-scripts.js"
 	},
 	"scripts": {
 		"build": "webpack",
