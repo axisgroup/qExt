@@ -10,17 +10,21 @@ import {
 
 import {
 	qextConfig,
+	authenticate,
 	deleteDist,
+	copySrc,
 	copyQext,
 	copyStatic,
-	copySrc,
 	defineWebpack,
 	build,
 	zip,
 	uploadExtension,
-	authenticate,
-} from "./components/component-exports"
-import deployToDesktop from "./components/deployToDesktop"
+	deployToDesktop,
+} from "./components"
+
+import program from "commander"
+
+program.option("-w, --watch", "Watch").parse(process.argv)
 
 /* Get Config */
 const configFile = "./qext.config.json"
@@ -95,7 +99,11 @@ const webpack$ = combineLatest(copyQext$, copyStatic$).pipe(
 /* Build */
 const build$ = webpack$.pipe(
 	withLatestFrom(qextConfig$),
-	build(([webpack, config]) => ({ webpack, config }))
+	build(([webpack, config]) => ({
+		compiler: webpack,
+		config,
+		watch: program.watch,
+	}))
 )
 
 /* Distribute */
@@ -129,5 +137,3 @@ const deployToDesktop$ = dist$.pipe(
 )
 
 merge(upload$, deployToDesktop$).subscribe(() => {}, err => console.error(err))
-
-// upload$.subscribe(() => {}, err => console.error(err))
