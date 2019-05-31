@@ -10,17 +10,17 @@ import {
 
 import {
 	qextConfig,
+	authenticate,
 	deleteDist,
+	copySrc,
 	copyQext,
 	copyStatic,
-	copySrc,
 	defineWebpack,
 	build,
 	zip,
 	uploadExtension,
-	authenticate,
-} from "./components/component-exports"
-import deployToDesktop from "./components/deployToDesktop"
+	deployToDesktop,
+} from "./components"
 
 /* Get Config */
 const configFile = "./qext.config.json"
@@ -129,5 +129,3 @@ const deployToDesktop$ = dist$.pipe(
 )
 
 merge(upload$, deployToDesktop$).subscribe(() => {}, err => console.error(err))
-
-// upload$.subscribe(() => {}, err => console.error(err))
