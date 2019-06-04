@@ -148,3 +148,8 @@ const deployToDesktop$ = dist$.pipe(
 )
 
 merge(upload$, deployToDesktop$).subscribe(() => {}, err => console.error(err))
+
+process.on("SIGINT", () => {
+	console.info("\nqExt Ended.")
+	process.exit()
+})
