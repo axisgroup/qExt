@@ -66,7 +66,7 @@ const copySource$ = removeDist$.pipe(
 	withLatestFrom(qextConfig$),
 	pluck(1),
 	filter(config => config.mode === "vanilla"),
-	copySrc()
+	copySrc(config => ({ config, watch: program.watch }))
 )
 
 /* Copy qext file */
@@ -82,9 +82,20 @@ const copyQext$ = removeDist$.pipe(
 const copyStatic$ = removeDist$.pipe(
 	withLatestFrom(qextConfig$),
 	pluck(1),
-	/* Only copy static directory if compiling */
 	filter(config => config.mode === "compile"),
-	copyStatic()
+	/* Only copy static directory if compiling */
+	mergeMap(config =>
+		iif(
+			/* if static property defined.. */
+			() => config.compile.static !== undefined,
+
+			/* copy static */
+			copyStatic(config),
+
+			/* else, don't copy */
+			of("no static directory")
+		)
+	)
 )
 
 /* Define Webpack */
