@@ -63,9 +63,6 @@ export default inputAccessorFunction => {
 									// compile-qext property not defined
 									else if (config.compile.qext === undefined)
 										observer.error(`qext property not defined in "compile"`)
-									// compile-static property not defined
-									else if (config.compile.static === undefined)
-										observer.error(`static property not defined in "compile"`)
 								}
 
 								// Deploy Desktop

@@ -11,7 +11,7 @@ export default inputAccessorFunction => {
 	return extension$ =>
 		extension$.pipe(
 			map(accessorFunction),
-			switchMap(config =>
+			switchMap(({ config }) =>
 				Observable.create(observer => {
 					const qextFileExists = readdir(`${process.cwd()}/src`).then(files => {
 						const qextFiles = files.filter(file => file.indexOf(".qext") > -1)
