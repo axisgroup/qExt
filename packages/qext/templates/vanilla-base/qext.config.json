@@ -1,0 +1,8 @@
+{
+	"extension": "qext-template",
+	"mode": "vanilla",
+	"output": "./dist",
+	"vanilla": {
+		"entry": "./src"
+	}
+}
