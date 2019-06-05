@@ -1,10 +1,10 @@
 import fs from "fs-extra"
 import path from "path"
 
-export default extensionName => {
+export default ({ extensionName, templateType }) => {
 	/** directory path */
 	const rootPath = path.resolve(extensionName)
-	const templateFiles = path.resolve(__dirname, "../template")
+	const templateFiles = path.resolve(__dirname, `../templates/${templateType}`)
 
 	/** Create new directory */
 	const createRootDirectory = fs.ensureDir(rootPath)
