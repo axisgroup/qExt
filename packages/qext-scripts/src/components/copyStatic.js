@@ -1,27 +1,17 @@
-const fs = require('fs-extra')
-import { Observable } from 'rxjs'
-import { map, switchMap } from 'rxjs/operators'
+const fs = require("fs-extra")
+import { Observable } from "rxjs"
 
-export default inputAccessorFunction => {
-  let accessorFunction
+export default config =>
+	Observable.create(observer => {
+		const copyStatic = fs.copy(
+			config.compile.static,
+			`./dist/${config.extension}/static`
+		)
 
-  if(inputAccessorFunction) accessorFunction = inputAccessorFunction
-  else accessorFunction = a => a
-
-  return extension$ => extension$.pipe(
-    map(accessorFunction),
-    switchMap(config => Observable.create(observer => {
-      const copyStatic = fs.copy(
-        config.compile.static,
-        `./dist/${config.extension}/static`
-      )
-  
-      copyStatic
-        .then(() => {
-          observer.next('static copied')
-          observer.complete()
-        })
-        .catch(err => observer.error(`${config.compile.static} not found\n`))
-    }))
-  )
-}
+		copyStatic
+			.then(() => {
+				observer.next("static copied")
+				observer.complete()
+			})
+			.catch(err => observer.error(`${config.compile.static} not found\n`))
+	})
