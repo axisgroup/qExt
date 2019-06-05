@@ -8,7 +8,5 @@
 	"keywords": [],
 	"author": "",
 	"license": "ISC",
-	"devDependencies": {
-		"qext-scripts": "^1.0.0"
-	}
+	"devDependencies": {}
 }
