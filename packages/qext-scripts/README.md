@@ -12,7 +12,7 @@ Install qext-scripts
 npm install --save qext-scripts
 ```
 
-qExt Scripts references a `qext.config.json` file at the root of your directory. See [examples on setting up the config file](https://github.com/axisgroup/qExt/blob/develop/packages/qext-scripts/docs/examples.md). Also check out the full [configuration documentation](https://github.com/axisgroup/qExt/blob/develop/packages/qext-scripts/docs/configuration.md)
+qExt Scripts references a `qext.config.json` file at the root of your directory. See [examples on setting up the config file](https://github.com/axisgroup/qExt/blob/master/packages/qext-scripts/docs/examples.md). Also check out the full [configuration documentation](https://github.com/axisgroup/qExt/blob/master/packages/qext-scripts/docs/configuration.md)
 
 ## Usage
 
