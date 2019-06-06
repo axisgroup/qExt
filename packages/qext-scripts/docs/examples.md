@@ -22,15 +22,15 @@ Assume you have a project structure:
 
 The following configuration will compile the index.js file and any dependent files into an extension within the `dist` directory and then zip the directory
 
-```
+```json
 {
-  "extension": "my-extension",
-  "output": "./dist",
-  "mode": "compile",
-  "compile": {
-    "entry": "index.js",
-    "qext": "index.qext"
-  }
+	"extension": "my-extension",
+	"output": "./dist",
+	"mode": "compile",
+	"compile": {
+		"entry": "index.js",
+		"qext": "index.qext"
+	}
 }
 ```
 
@@ -48,11 +48,11 @@ output:
 
 _**NOTE: make sure your javascript file attaches your define function to the window**_
 
-```
+```js
 window.define([], function() {
-  return {
-    //...paint function and others defined here
-  }
+	return {
+		//...paint function and others defined here
+	}
 })
 ```
 
@@ -74,14 +74,14 @@ Assume you have a project structure as such:
 
 The following configuration will copy the contents of the `src` directory to a new extension directory within `dist` and then zip up the directory.
 
-```
+```json
 {
-  "extension": "my-extension",
-  "output": "./dist",
-  "mode": "vanilla",
-  "vanilla": {
-    "entry": "./src"
-  }
+	"extension": "my-extension",
+	"output": "./dist",
+	"mode": "vanilla",
+	"vanilla": {
+		"entry": "./src"
+	}
 }
 ```
 
@@ -117,18 +117,18 @@ Header authentication works through a virtual proxy set up on the Qlik Sense ser
 
 Example:
 
-```
+```json
 {
-  "extension": "my-extension",
-  "output": "./dist",
-  "mode": "compile",
-  "deploy": "server",
-  "authenticate": "header",
-  "serverConfig": {
-    "host": "<hostname>",
-    "hdr-usr": "DOMAIN\\username",
-    "prefix": "hdr"
-  }
+	"extension": "my-extension",
+	"output": "./dist",
+	"mode": "compile",
+	"deploy": "server",
+	"authenticate": "header",
+	"serverConfig": {
+		"host": "<hostname>",
+		"hdr-usr": "DOMAIN\\username",
+		"prefix": "hdr"
+	}
 }
 ```
 
@@ -138,18 +138,22 @@ You can also have qext-scripts log connect to the engine using your sign in cred
 
 Example:
 
-```
+```json
 {
-  "extension": "my-extension",
-  "output": "./dist",
-  "mode": "compile",
-  "deploy": "server",
-  "authenticate": "header",
-  "serverConfig": {
-    "host": "<hostname>",
-  }
+	"extension": "my-extension",
+	"output": "./dist",
+	"mode": "compile",
+	"deploy": "server",
+	"authenticate": "header",
+	"serverConfig": {
+		"host": "<hostname>"
+	}
 }
 ```
+
+</br>
+
+---
 
 ### `desktop`
 
@@ -157,14 +161,14 @@ If you're developing and testing your extension against a Qlik Sense Desktop ins
 
 Example:
 
-```
+```json
 {
-  "extension": "my-extension",
-  "output": "./dist",
-  "mode": "compile",
-  "deploy": "desktop",
-  "desktopConfig": {
-    "destination": "C:\\Users\\%username%\\Documents\\Qlik\\Sense\\Extensions"
-  }
+	"extension": "my-extension",
+	"output": "./dist",
+	"mode": "compile",
+	"deploy": "desktop",
+	"desktopConfig": {
+		"destination": "C:\\Users\\%username%\\Documents\\Qlik\\Sense\\Extensions"
+	}
 }
 ```
