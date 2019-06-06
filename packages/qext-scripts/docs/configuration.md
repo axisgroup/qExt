@@ -16,6 +16,8 @@ This section defines the configuration of the `qext.config.json` file.
 
 </br>
 
+---
+
 ### `compile`
 
 | Property | Type   | Reqiured | Description                        |
@@ -23,6 +25,10 @@ This section defines the configuration of the `qext.config.json` file.
 | `entry`  | String | Yes      | Entry file for webpack compilation |
 | `qext`   | String | Yes      | Location of qext file              |
 | `static` | String | Yes      | Location of static directory       |
+
+</br>
+
+---
 
 ### `vanilla`
 
@@ -32,13 +38,7 @@ This section defines the configuration of the `qext.config.json` file.
 
 </br>
 
-### `desktopConfig`
-
-| Property      | Type   | Reqiured | Description                             |
-| ------------- | ------ | -------- | --------------------------------------- |
-| `destination` | String | Yes      | Directory location to deploy on desktop |
-
-</br>
+---
 
 ### `serverConfig`
 
@@ -50,3 +50,13 @@ This section defines the configuration of the `qext.config.json` file.
 | `allowSelfSignedCertificate` | Bool   | No                        | Allow rejectUnauthorized set to true in http requests |
 | `hdr-usr`                    | String | authenticate === "header" | Directory location to deploy on desktop               |
 | `prefix`                     | String | authenticate === "header" | Prefix for virtual proxy                              |
+
+</br>
+
+---
+
+### `desktopConfig`
+
+| Property      | Type   | Reqiured | Description                             |
+| ------------- | ------ | -------- | --------------------------------------- |
+| `destination` | String | Yes      | Directory location to deploy on desktop |
