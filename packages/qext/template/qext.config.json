@@ -1,8 +1,0 @@
-{
-	"extension": "template",
-	"mode": "vanilla",
-	"output": "./dist",
-	"vanilla": {
-		"entry": "./src"
-	}
-}
