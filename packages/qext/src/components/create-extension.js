@@ -1,23 +1,34 @@
 import fs from "fs-extra"
 import path from "path"
 
-export default extensionName => {
+export default ({ extensionName, templateType }) => {
 	/** directory path */
 	const rootPath = path.resolve(extensionName)
-	const templateFiles = path.resolve(__dirname, "../template")
+	const templateFiles = path.resolve(__dirname, `../templates/${templateType}`)
 
 	/** Create new directory */
 	const createRootDirectory = fs.ensureDir(rootPath)
+
+	const qextPackageJsonPath = path.resolve(__dirname, "../package.json")
+	const qextScriptsVersion_Pr = fs
+		.readJson(qextPackageJsonPath)
+		.then(qextPackageJson => qextPackageJson.qextScriptsVersion)
 
 	/**
 	 * PACKAGE JSON
 	 */
 	const templatePackageJsonPath = path.join(templateFiles, "package.json")
-	const createPackageJson = fs
-		.readJson(templatePackageJsonPath)
-		.then(packageObj => ({
+	const createPackageJson = Promise.all([
+		fs.readJson(templatePackageJsonPath),
+		qextScriptsVersion_Pr,
+	])
+		.then(([packageObj, qextScriptsVersion]) => ({
 			...packageObj,
 			name: extensionName,
+			devDependencies: {
+				...packageObj.devDependencies,
+				"qext-scripts": qextScriptsVersion,
+			},
 		}))
 		.catch(console.error)
 

@@ -1,8 +1,5 @@
 import qextConfig from "./qextConfig"
 import deleteDist from "./deleteDist"
-import copyQext from "./copyQext"
-import copyStatic from "./copyStatic"
-import copySrc from "./copySrc"
 import defineWebpack from "./defineWebpack"
 import build from "./build"
 import zip from "./zip"
@@ -13,9 +10,6 @@ import deployToDesktop from "./deployToDesktop"
 export {
 	qextConfig,
 	deleteDist,
-	copyQext,
-	copyStatic,
-	copySrc,
 	defineWebpack,
 	build,
 	zip,

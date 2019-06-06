@@ -16,6 +16,12 @@ version.then(version => {
 		.version(version)
 		.option("-c, --create-extension <name>", "Create New Extension")
 		.option("-i, --install", "Install Dependencies")
+		.option(
+			"-t, --template [type]",
+			"Template",
+			/^(starter|base|vanilla-base)$/i,
+			"starter"
+		)
 		.parse(process.argv)
 
 	if (!program.createExtension)
@@ -23,7 +29,10 @@ version.then(version => {
 			'set "-c, --create-extension <name>" flag to create extension'
 		)
 	else {
-		CreateExtension(program.createExtension)
+		CreateExtension({
+			extensionName: program.createExtension,
+			templateType: program.template,
+		})
 
 		if (program.install) InstallDependencies(program.createExtension)
 	}
