@@ -1,11 +1,12 @@
 {
 	"name": "qext",
-	"version": "1.0.0-alpha.5",
+	"version": "1.0.0-alpha.7",
 	"description": "",
 	"main": "index.js",
 	"bin": {
 		"qext": "./bin/qext.js"
 	},
+	"qextScriptsVersion": "1.0.0-beta.2",
 	"scripts": {
 		"build": "webpack",
 		"watch": "webpack --watch",

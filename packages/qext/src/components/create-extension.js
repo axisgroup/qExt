@@ -9,13 +9,10 @@ export default ({ extensionName, templateType }) => {
 	/** Create new directory */
 	const createRootDirectory = fs.ensureDir(rootPath)
 
-	const qextPackageJsonPath = path.resolve(
-		__dirname,
-		"../../qext-scripts/package.json"
-	)
+	const qextPackageJsonPath = path.resolve(__dirname, "../package.json")
 	const qextScriptsVersion_Pr = fs
 		.readJson(qextPackageJsonPath)
-		.then(qextPackageJson => qextPackageJson.version)
+		.then(qextPackageJson => qextPackageJson.qextScriptsVersion)
 
 	/**
 	 * PACKAGE JSON
