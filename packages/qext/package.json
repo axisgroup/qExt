@@ -12,7 +12,6 @@
 		"test": "mocha './test/**/*.spec.js'",
 		"test-only": "mocha"
 	},
-	"qextScriptsVersion": "1.0.0-beta.1",
 	"preferGlobal": true,
 	"keywords": [],
 	"author": "John Bellizzi",
