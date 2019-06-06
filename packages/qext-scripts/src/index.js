@@ -1,4 +1,4 @@
-import { Subject, combineLatest, of, iif, merge, BehaviorSubject } from "rxjs"
+import { of, iif, merge, BehaviorSubject } from "rxjs"
 import {
 	withLatestFrom,
 	share,
@@ -12,9 +12,6 @@ import {
 	qextConfig,
 	authenticate,
 	deleteDist,
-	copySrc,
-	copyQext,
-	copyStatic,
 	defineWebpack,
 	build,
 	zip,
@@ -61,48 +58,9 @@ const removeDist$ = authenticate$.pipe(
 	share(1)
 )
 
-/* Copy Source */
-const copySource$ = removeDist$.pipe(
+const webpack$ = removeDist$.pipe(
 	withLatestFrom(qextConfig$),
 	pluck(1),
-	filter(config => config.mode === "vanilla"),
-	copySrc(config => ({ config, watch: program.watch }))
-)
-
-/* Copy qext file */
-const copyQext$ = removeDist$.pipe(
-	withLatestFrom(qextConfig$),
-	pluck(1),
-	/* Only copy qext if we are compiling */
-	filter(config => config.mode === "compile"),
-	copyQext()
-)
-
-/* Copy Static Directory */
-const copyStatic$ = removeDist$.pipe(
-	withLatestFrom(qextConfig$),
-	pluck(1),
-	filter(config => config.mode === "compile"),
-	/* Only copy static directory if compiling */
-	mergeMap(config =>
-		iif(
-			/* if static property defined.. */
-			() => config.compile.static !== undefined,
-
-			/* copy static */
-			copyStatic(config),
-
-			/* else, don't copy */
-			of("no static directory")
-		)
-	)
-)
-
-/* Define Webpack */
-const webpack$ = combineLatest(copyQext$, copyStatic$).pipe(
-	withLatestFrom(qextConfig$),
-	pluck(1),
-	filter(config => config.mode === "compile"),
 	defineWebpack(),
 	share(1)
 )
@@ -114,14 +72,12 @@ const build$ = webpack$.pipe(
 		compiler: webpack,
 		config,
 		watch: program.watch,
-	}))
+	})),
+	share(1)
 )
 
-/* Distribute */
-const dist$ = merge(build$, copySource$).pipe(share(1))
-
 /* Zip */
-const zip$ = dist$.pipe(
+const zip$ = build$.pipe(
 	withLatestFrom(qextConfig$),
 	pluck(1),
 	zip()
@@ -140,7 +96,7 @@ const upload$ = zip$.pipe(
 )
 
 /* Deploy */
-const deployToDesktop$ = dist$.pipe(
+const deployToDesktop$ = build$.pipe(
 	withLatestFrom(qextConfig$),
 	pluck(1),
 	filter(config => config.deploy === "desktop"),

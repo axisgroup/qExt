@@ -3,6 +3,7 @@
 	"mode": "vanilla",
 	"output": "./dist",
 	"vanilla": {
-		"entry": "./src"
+		"entry": "./src",
+		"static": "./static"
 	}
 }
