@@ -1,6 +1,6 @@
 {
 	"name": "qext-packages",
-	"version": "1.0.2",
+	"version": "1.0.3",
 	"description": "",
 	"scripts": {
 		"git-pull-develop": "git checkout develop && git pull origin master && git push origin develop",
