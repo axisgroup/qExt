@@ -24,7 +24,7 @@ npm install -g qext
 qext --create-extension my-extension --template starter --install
 ```
 
-The above command will create a new project directory with whatever name was passed to the `--create-extension` flag, using the starter template and installing all necessary dependencies. See more [qext templates here](https://github.com/axisgroup/qExt/tree/master/packages/qext-scripts#template-projects)
+The above command will create a new project directory with whatever name was passed to the `--create-extension` flag, using the starter template and installing all necessary dependencies. See more [qext templates here](https://github.com/axisgroup/qExt/tree/master/packages/qext#template-projects)
 
 ### Running qExt
 
