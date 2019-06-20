@@ -1,13 +1,12 @@
 {
 	"name": "qext-packages",
-	"version": "1.0.1",
+	"version": "1.0.3",
 	"description": "",
 	"scripts": {
 		"git-pull-develop": "git checkout develop && git pull origin master && git push origin develop",
-		"git-pull-alpha-release": "git checkout alpha-release && git pull origin master && git push origin alpha-release",
 		"git-pull-beta-release": "git checkout beta-release && git pull origin master && git push origin beta-release",
 		"git-pull-master": "git checkout master && git pull origin master",
-		"git-pull-all": "npm run git-pull-master && npm run git-pull-beta-release && npm run git-pull-alpha-release && npm run git-pull-develop"
+		"git-pull-all": "npm run git-pull-master && npm run git-pull-beta-release && npm run git-pull-develop"
 	},
 	"keywords": [],
 	"author": "John Bellizzi",
