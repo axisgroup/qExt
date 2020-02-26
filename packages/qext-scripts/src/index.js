@@ -1,12 +1,7 @@
+#!/usr/bin/env node
+
 import { of, iif, merge, BehaviorSubject } from "rxjs"
-import {
-	withLatestFrom,
-	share,
-	mergeMap,
-	filter,
-	pluck,
-	tap,
-} from "rxjs/operators"
+import { withLatestFrom, share, mergeMap, filter, pluck } from "rxjs/operators"
 
 import {
 	qextConfig,
