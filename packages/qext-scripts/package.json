@@ -10,7 +10,7 @@
 		"build": "rollup -c",
 		"watch": "rollup -c -w",
 		"qext": "node dist/bundle/index.js",
-		"test": "mocha './test/**/*.spec.js'",
+		"test": "mocha './test/**/test.spec.js'",
 		"test-only": "mocha",
 		"update-version-beta": "npm version prerelease --preid=beta",
 		"publish-beta": "npm publish --tag beta"
