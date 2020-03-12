@@ -1,17 +1,8 @@
 {
-	"extension": "example-extension",
-	"mode": "compile",
+	"extension": "example",
 	"output": "./dist",
-	"deploy": "server",
-	"authenticate": "windows",
-	"compile": {
-		"entry": "./src/index.js",
-		"qext": "./src/index.qext",
-		"static": "./static"
-	},
-	"serverConfig": {
-		"host": "172.16.84.100",
-		"isSecure": true,
-		"allowSelfSignedCertificate": true
+	"mode": "vanilla",
+	"vanilla": {
+		"entry": "./src"
 	}
 }

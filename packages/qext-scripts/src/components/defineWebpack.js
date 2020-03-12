@@ -22,18 +22,13 @@ export default inputAccessorFunction => {
 					switch (config.mode) {
 						/** Compile Config */
 						case "compile":
-							const entryExists = stat(
-								path.resolve(process.cwd(), config.compile.entry)
-							)
+							const entryExists = stat(path.resolve(process.cwd(), config.compile.entry))
 
 							webpackConfig = entryExists
 								.then(() => ({
 									entry: [`${config.compile.entry}`],
 									output: {
-										path: `${path.resolve(
-											process.cwd(),
-											config.output + "/" + config.extension
-										)}`,
+										path: `${path.resolve(process.cwd(), config.output + "/" + config.extension)}`,
 										filename: `${config.extension}.js`,
 									},
 									mode: "development",
@@ -57,10 +52,7 @@ export default inputAccessorFunction => {
 											},
 											{
 												test: /\.css$/,
-												use: [
-													{ loader: "style-loader" },
-													{ loader: "css-loader" },
-												],
+												use: [{ loader: "style-loader" }, { loader: "css-loader" }],
 											},
 										],
 									},
@@ -68,28 +60,19 @@ export default inputAccessorFunction => {
 										new CopyPlugin([
 											{
 												// qext
-												from: path.resolve(
-													process.cwd(),
-													`${config.compile.qext}`
-												),
+												from: path.resolve(process.cwd(), `${config.compile.qext}`),
 												to: path.resolve(
 													process.cwd(),
-													`${config.output}/${config.extension}/${
-														config.extension
-													}.qext`
+													`${config.output}/${config.extension}/${config.extension}.qext`
 												),
 											},
-											{
-												// static
-												from: path.resolve(
-													process.cwd(),
-													config.compile.static
-												),
-												to: path.resolve(
-													process.cwd(),
-													`${config.output}/${config.extension}/static`
-												),
-											},
+											...(config.compile.state
+												? {
+														// static
+														from: path.resolve(process.cwd(), config.compile.static),
+														to: path.resolve(process.cwd(), `${config.output}/${config.extension}/static`),
+												  }
+												: {}),
 										]),
 									],
 								}))
@@ -99,40 +82,35 @@ export default inputAccessorFunction => {
 
 						/** Vanilla Config */
 						case "vanilla":
-							const entryContents = readdir(
-								path.resolve(process.cwd(), config.vanilla.entry)
-							)
+							const entryContents = readdir(path.resolve(process.cwd(), config.vanilla.entry))
 								.then(files => files.filter(file => file.indexOf(".js") > -1))
 								.then(jsFiles => `${config.vanilla.entry}/${jsFiles[0]}`)
 
-							webpackConfig = entryContents.then(entryFile => ({
-								entry: [entryFile],
-								mode: "development",
-								plugins: [
-									new DisableOutputWebpackPlugin(),
-									new CopyPlugin([
-										{
-											// qext
-											from: path.resolve(
-												process.cwd(),
-												`${config.vanilla.entry}`
-											),
-											to: path.resolve(
-												process.cwd(),
-												`${config.output}/${config.extension}`
-											),
-										},
-										{
-											// static
-											from: path.resolve(process.cwd(), config.vanilla.static),
-											to: path.resolve(
-												process.cwd(),
-												`${config.output}/${config.extension}/static`
-											),
-										},
-									]),
-								],
-							}))
+							webpackConfig = entryContents.then(entryFile => {
+								const webpackConfig = {
+									entry: [entryFile],
+									mode: "development",
+									plugins: [
+										new DisableOutputWebpackPlugin(),
+										new CopyPlugin([
+											{
+												// qext
+												from: path.resolve(process.cwd(), `${config.vanilla.entry}`),
+												to: path.resolve(process.cwd(), `${config.output}/${config.extension}`),
+											},
+											...(config.vanilla.static
+												? {
+														// static
+														from: path.resolve(process.cwd(), config.vanilla.static),
+														to: path.resolve(process.cwd(), `${config.output}/${config.extension}/static`),
+												  }
+												: {}),
+										]),
+									],
+								}
+								console.log(webpackConfig)
+								return webpackConfig
+							})
 
 							break
 
