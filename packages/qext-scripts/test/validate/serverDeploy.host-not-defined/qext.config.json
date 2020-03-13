@@ -1,7 +1,8 @@
 {
-	"extension": "example",
+	"extension": "test-extension",
 	"output": "./dist",
 	"vanilla": {
 		"entry": "./src"
-	}
+	},
+	"serverDeploy": {}
 }

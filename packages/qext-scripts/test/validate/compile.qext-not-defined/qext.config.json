@@ -1,0 +1,7 @@
+{
+	"extension": "test-extension",
+	"output": "./dist",
+	"compile": {
+		"entry": "./src/index.js"
+	}
+}
