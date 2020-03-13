@@ -1,8 +1,13 @@
 #!/usr/bin/env node
 
+import { merge, BehaviorSubject, iif, empty, of, from } from "rxjs"
+import { share, mergeMap, switchMap, map, tap, mapTo } from "rxjs/operators"
+import { remove } from "fs-extra"
+import delve from "dlv"
+
 import { validateQextConfig } from "./validate"
-import { share } from "rxjs/operators"
-import { merge } from "rxjs"
+import { authenticate } from "./authenticate"
+
 // import { of, iif, merge, BehaviorSubject } from "rxjs"
 // import { withLatestFrom, share, mergeMap, filter, pluck } from "rxjs/operators"
 
@@ -24,11 +29,38 @@ import { merge } from "rxjs"
 /* Get Config */
 const configFile = "./qext.config.json"
 
+/** Validate Qext Config File */
 const validateQextConfig$ = validateQextConfig(configFile).pipe(share(1))
 
-// validateQextConfig$.subscribe()
+// /** Cookie Jar */
+// const cookieJar$ = new BehaviorSubject(null)
 
-merge(validateQextConfig$).subscribe(() => {}, err => console.error(err))
+/** Authentication */
+const authenticated$ = validateQextConfig$.pipe(
+	mergeMap(config =>
+		iif(
+			/** if deploying with windowsAuth */
+			() => delve(config, "serverDeploy.windowsAuth", false),
+
+			/** Authenticate */
+			authenticate(config),
+
+			/** else, skip authentication */
+			of(config)
+		)
+	),
+	share(1)
+)
+
+/** Remove Dist folder */
+const removeDist$ = authenticated$.pipe(switchMap(config => from(remove(config.output)).pipe(mapTo(config))))
+
+merge(removeDist$).subscribe(
+	next => {
+		console.log(next)
+	},
+	err => console.error(err)
+)
 
 // const qextConfig$ = of(configFile).pipe(
 // 	qextConfig(),

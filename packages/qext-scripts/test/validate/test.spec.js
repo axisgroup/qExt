@@ -85,19 +85,11 @@ describe("validate-qext-config", function() {
 		})
 	})
 
-	it("should fail if neither serverDeploy.hdrAuthUser nor serverDeploy.windowsAuth defined", done => {
-		const extensionDir = path.resolve(__dirname, "./serverDeploy.hdrAuthUser-and-serverDeploy.windowsAuth-not-defined")
-		execQextScripts(extensionDir, (error, stdout, stderr) => {
-			stderr.should.equal("config must contain at least one of [serverDeploy.hdrAuthUser, serverDeploy.windowsAuth]\n")
-			done()
-		})
-	})
-
 	it("should fail if both serverDeploy.hdrAuthUser and serverDeploy.windowsAuth defined", done => {
 		const extensionDir = path.resolve(__dirname, "./serverDeploy.hdrAuthUser-and-serverDeploy.windowsAuth-both-defined")
 		execQextScripts(extensionDir, (error, stdout, stderr) => {
 			stderr.should.equal(
-				"config contains a conflict between exclusive peers [serverDeploy.hdrAuthUser, serverDeploy.windowsAuth]\n"
+				"config contains a conflict between optional exclusive peers [serverDeploy.hdrAuthUser, serverDeploy.windowsAuth]\n"
 			)
 			done()
 		})

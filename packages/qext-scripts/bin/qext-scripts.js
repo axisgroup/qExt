@@ -1,10 +1,15 @@
 #!/usr/bin/env node
 'use strict';
 
-var joi = require('@hapi/joi');
+function _interopDefault (ex) { return (ex && (typeof ex === 'object') && 'default' in ex) ? ex['default'] : ex; }
+
 var rxjs = require('rxjs');
-var fsExtra = require('fs-extra');
 var operators = require('rxjs/operators');
+var fsExtra = require('fs-extra');
+var delve = _interopDefault(require('dlv'));
+var joi = require('@hapi/joi');
+var child_process = require('child_process');
+var prompt = _interopDefault(require('prompt'));
 
 var validateQextConfig = configFile =>
 	rxjs.Observable.create(observer => {
@@ -32,10 +37,12 @@ var validateQextConfig = configFile =>
 					host: joi.string().required(),
 					port: joi.number(),
 					prefix: joi.string(),
-					isSecure: joi.bool().default(false),
+					isSecure: joi.bool().default(true),
 					allowSelfSignedSignature: joi.bool().default(false),
 					hdrAuthUser: joi.string(),
 					windowsAuth: joi.bool().valid(true),
+					user: joi.string(),
+					password: joi.string(),
 				}),
 				desktopDeploy: joi.object({
 					destination: joi.string().required(),
@@ -43,7 +50,7 @@ var validateQextConfig = configFile =>
 			})
 				.unknown(true)
 				.xor("vanilla", "compile")
-				.xor("serverDeploy.hdrAuthUser", "serverDeploy.windowsAuth")
+				.oxor("serverDeploy.hdrAuthUser", "serverDeploy.windowsAuth")
 				.oxor("serverDeploy", "desktopDeploy");
 
 			const { error, value } = schema.validate(config);
@@ -55,6 +62,67 @@ var validateQextConfig = configFile =>
 			}
 		});
 	});
+
+var authenticate = config =>
+	rxjs.Observable.create(observer => {
+		console.log("\nauthenticate:\n");
+
+		const serverDeploy = config.serverDeploy;
+
+		const authSchema = {
+			properties: {
+				user: { required: true },
+				password: { hidden: true },
+			},
+		};
+
+		/** Curl Execution statement that authenticates a user against Qlik Sense */
+		const execCurl = (user, password) => {
+			child_process.exec(
+				`curl -s -L --ntlm -u ${user}:${password} --insecure -c - ${serverDeploy.isSecure ? "https" : "http"}://${
+					serverDeploy.host
+				}/qrs/about?xrfkey=0123456789abcdef --header "x-qlik-xrfkey: 0123456789abcdef" --header "User-Agent: Windows"`,
+				/** Callback */
+				(error, stdout, stderr) => {
+					/** Error */
+					if (error !== null) observer.error(error);
+					// No Response
+					else if (stdout.indexOf("X-Qlik-Session") === -1)
+						observer.error({ message: "authentication failed", reAuthenticate: true });
+					// Success
+					else {
+						/** pass the session id on for calling apis */
+						observer.next({
+							message: "authentication successful",
+							session: stdout.split("X-Qlik-Session")[1].trim(),
+						});
+						observer.complete();
+					}
+				}
+			);
+		};
+
+		/** username & password passed in via config */
+		if (serverDeploy.user && serverDeploy.password) execCurl(serverDeploy.user, serverDeploy.password);
+		else {
+			/** prompt user for username and password */
+			prompt.start();
+			prompt.get(authSchema, (err, result) => {
+				execCurl(result.user, result.password);
+			});
+		}
+	}).pipe(
+		/** retry up to 3 times when authentication fails */
+		operators.retryWhen(errors =>
+			errors.pipe(
+				operators.take(3),
+				operators.filter(err => err.reAuthenticate),
+				operators.tap(({ message }) => console.log(`\n\n${message}`))
+			)
+		),
+		operators.tap(({ message }) => console.log(`${message}\n`)),
+		operators.map(({ session }) => ({ ...config, session }))
+	);
 
 // import { of, iif, merge, BehaviorSubject } from "rxjs"
 // import { withLatestFrom, share, mergeMap, filter, pluck } from "rxjs/operators"
@@ -77,11 +145,38 @@ var validateQextConfig = configFile =>
 /* Get Config */
 const configFile = "./qext.config.json";
 
+/** Validate Qext Config File */
 const validateQextConfig$ = validateQextConfig(configFile).pipe(operators.share(1));
 
-// validateQextConfig$.subscribe()
+// /** Cookie Jar */
+// const cookieJar$ = new BehaviorSubject(null)
 
-rxjs.merge(validateQextConfig$).subscribe(() => {}, err => console.error(err));
+/** Authentication */
+const authenticated$ = validateQextConfig$.pipe(
+	operators.mergeMap(config =>
+		rxjs.iif(
+			/** if deploying with windowsAuth */
+			() => delve(config, "serverDeploy.windowsAuth", false),
+
+			/** Authenticate */
+			authenticate(config),
+
+			/** else, skip authentication */
+			rxjs.of(config)
+		)
+	),
+	operators.share(1)
+);
+
+/** Remove Dist folder */
+const removeDist$ = authenticated$.pipe(operators.switchMap(config => rxjs.from(fsExtra.remove(config.output)).pipe(operators.mapTo(config))));
+
+rxjs.merge(removeDist$).subscribe(
+	next => {
+		console.log(next);
+	},
+	err => console.error(err)
+);
 
 // const qextConfig$ = of(configFile).pipe(
 // 	qextConfig(),

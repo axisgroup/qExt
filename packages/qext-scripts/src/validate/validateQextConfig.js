@@ -28,10 +28,12 @@ export default configFile =>
 					host: string().required(),
 					port: number(),
 					prefix: string(),
-					isSecure: bool().default(false),
+					isSecure: bool().default(true),
 					allowSelfSignedSignature: bool().default(false),
 					hdrAuthUser: string(),
 					windowsAuth: bool().valid(true),
+					user: string(),
+					password: string(),
 				}),
 				desktopDeploy: object({
 					destination: string().required(),
@@ -39,7 +41,7 @@ export default configFile =>
 			})
 				.unknown(true)
 				.xor("vanilla", "compile")
-				.xor("serverDeploy.hdrAuthUser", "serverDeploy.windowsAuth")
+				.oxor("serverDeploy.hdrAuthUser", "serverDeploy.windowsAuth")
 				.oxor("serverDeploy", "desktopDeploy")
 
 			const { error, value } = schema.validate(config)
