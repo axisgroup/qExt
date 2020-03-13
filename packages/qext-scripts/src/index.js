@@ -57,7 +57,7 @@ const removeDist$ = authenticated$.pipe(switchMap(config => from(remove(config.o
 
 merge(removeDist$).subscribe(
 	next => {
-		console.log(next)
+		// console.log(next)
 	},
 	err => console.error(err)
 )

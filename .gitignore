@@ -2,3 +2,4 @@ node_modules/
 dist/
 test-extension/
 *.tgz
+packages/qext-scripts/test/authenticate/authentication/qext.config.json

@@ -3,12 +3,9 @@ import { exec } from "child_process"
 import prompt from "prompt"
 import { take, retryWhen, tap, map, filter } from "rxjs/operators"
 
-export default config =>
-	Observable.create(observer => {
-		console.log("\nauthenticate:\n")
-
-		const serverDeploy = config.serverDeploy
-
+export default config => {
+	const serverDeploy = config.serverDeploy
+	return Observable.create(observer => {
 		const authSchema = {
 			properties: {
 				user: { required: true },
@@ -46,6 +43,7 @@ export default config =>
 		if (serverDeploy.user && serverDeploy.password) execCurl(serverDeploy.user, serverDeploy.password)
 		else {
 			/** prompt user for username and password */
+			console.log("\nauthenticate:\n")
 			prompt.start()
 			prompt.get(authSchema, (err, result) => {
 				execCurl(result.user, result.password)
@@ -55,7 +53,7 @@ export default config =>
 		/** retry up to 3 times when authentication fails */
 		retryWhen(errors =>
 			errors.pipe(
-				take(3),
+				take(serverDeploy.user && serverDeploy.password ? 1 : 3),
 				filter(err => err.reAuthenticate),
 				tap(({ message }) => console.log(`\n\n${message}`))
 			)
@@ -63,3 +61,4 @@ export default config =>
 		tap(({ message }) => console.log(`${message}\n`)),
 		map(({ session }) => ({ ...config, session }))
 	)
+}

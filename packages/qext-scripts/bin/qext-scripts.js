@@ -63,12 +63,9 @@ var validateQextConfig = configFile =>
 		});
 	});
 
-var authenticate = config =>
-	rxjs.Observable.create(observer => {
-		console.log("\nauthenticate:\n");
-
-		const serverDeploy = config.serverDeploy;
-
+var authenticate = config => {
+	const serverDeploy = config.serverDeploy;
+	return rxjs.Observable.create(observer => {
 		const authSchema = {
 			properties: {
 				user: { required: true },
@@ -106,6 +103,7 @@ var authenticate = config =>
 		if (serverDeploy.user && serverDeploy.password) execCurl(serverDeploy.user, serverDeploy.password);
 		else {
 			/** prompt user for username and password */
+			console.log("\nauthenticate:\n");
 			prompt.start();
 			prompt.get(authSchema, (err, result) => {
 				execCurl(result.user, result.password);
@@ -115,14 +113,15 @@ var authenticate = config =>
 		/** retry up to 3 times when authentication fails */
 		operators.retryWhen(errors =>
 			errors.pipe(
-				operators.take(3),
+				operators.take(serverDeploy.user && serverDeploy.password ? 1 : 3),
 				operators.filter(err => err.reAuthenticate),
 				operators.tap(({ message }) => console.log(`\n\n${message}`))
 			)
 		),
 		operators.tap(({ message }) => console.log(`${message}\n`)),
 		operators.map(({ session }) => ({ ...config, session }))
-	);
+	)
+};
 
 // import { of, iif, merge, BehaviorSubject } from "rxjs"
 // import { withLatestFrom, share, mergeMap, filter, pluck } from "rxjs/operators"
@@ -173,7 +172,7 @@ const removeDist$ = authenticated$.pipe(operators.switchMap(config => rxjs.from(
 
 rxjs.merge(removeDist$).subscribe(
 	next => {
-		console.log(next);
+		// console.log(next)
 	},
 	err => console.error(err)
 );
