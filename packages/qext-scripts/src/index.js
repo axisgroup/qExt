@@ -1,12 +1,13 @@
 #!/usr/bin/env node
 
-import { merge, BehaviorSubject, iif, empty, of, from } from "rxjs"
+import { merge, BehaviorSubject, iif, empty, of, from, combineLatest, Observable } from "rxjs"
 import { share, mergeMap, switchMap, map, tap, mapTo } from "rxjs/operators"
 import { remove } from "fs-extra"
 import delve from "dlv"
 
 import { validateQextConfig } from "./validate"
 import { authenticate } from "./authenticate"
+import { defineWebpack, build, buildVanilla, buildCompile } from "./build"
 
 // import { of, iif, merge, BehaviorSubject } from "rxjs"
 // import { withLatestFrom, share, mergeMap, filter, pluck } from "rxjs/operators"
@@ -22,9 +23,9 @@ import { authenticate } from "./authenticate"
 // 	deployToDesktop,
 // } from "./components"
 
-// import program from "commander"
+import program from "commander"
 
-// program.option("-w, --watch", "Watch").parse(process.argv)
+program.option("-w, --watch", "Watch").parse(process.argv)
 
 /* Get Config */
 const configFile = "./qext.config.json"
@@ -55,12 +56,28 @@ const authenticated$ = validateQextConfig$.pipe(
 /** Remove Dist folder */
 const removeDist$ = authenticated$.pipe(switchMap(config => from(remove(config.output)).pipe(mapTo(config))))
 
-merge(removeDist$).subscribe(
-	next => {
-		// console.log(next)
-	},
-	err => console.error(err)
+const build$ = removeDist$.pipe(
+	switchMap(config => {
+		if (config.vanilla) return buildVanilla({ config, watch: program.watch })
+		else if (config.compile) return buildCompile({ config, watch: program.watch })
+	})
 )
+
+build$.subscribe(console.log, console.error)
+// /** Define Webpack */
+// const webpack$ = authenticated$
+
+// combineLatest(removeDist$, webpack$).subscribe(console.log)
+// console.log,
+// console.error
+// .pipe(build(([removeDist, { webpack, config }]) => ({ compiler: webpack, config, watch: program.watch })))
+
+// merge(removeDist$).subscribe(
+// 	next => {
+// 		// console.log(next)
+// 	},
+// 	err => console.error(err)
+// )
 
 // const qextConfig$ = of(configFile).pipe(
 // 	qextConfig(),

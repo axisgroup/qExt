@@ -5,20 +5,26 @@ function _interopDefault (ex) { return (ex && (typeof ex === 'object') && 'defau
 
 var rxjs = require('rxjs');
 var operators = require('rxjs/operators');
-var fsExtra = require('fs-extra');
+var fs = require('fs-extra');
+var fs__default = _interopDefault(fs);
 var delve = _interopDefault(require('dlv'));
 var joi = require('@hapi/joi');
 var child_process = require('child_process');
 var prompt = _interopDefault(require('prompt'));
+var CopyWebpackPlugin = _interopDefault(require('copy-webpack-plugin'));
+require('disable-output-webpack-plugin');
+var path = _interopDefault(require('path'));
+var webpack = _interopDefault(require('webpack'));
+var program = _interopDefault(require('commander'));
 
 var validateQextConfig = configFile =>
 	rxjs.Observable.create(observer => {
 		if (configFile !== "./qext.config.json") observer.error("config should come from ./qext.config.json");
 
-		const configFileStat = fsExtra.stat(configFile);
+		const configFileStat = fs.stat(configFile);
 
 		const config = configFileStat
-			.then(() => fsExtra.readJSON(configFile))
+			.then(() => fs.readJSON(configFile))
 			.catch(() => observer.error(`${configFile} not found`));
 
 		config.then(config => {
@@ -27,6 +33,7 @@ var validateQextConfig = configFile =>
 				output: joi.string().required(),
 				vanilla: joi.object({
 					entry: joi.string().required(),
+					static: joi.string(),
 				}),
 				compile: joi.object({
 					entry: joi.string().required(),
@@ -123,23 +130,104 @@ var authenticate = config => {
 	)
 };
 
-// import { of, iif, merge, BehaviorSubject } from "rxjs"
-// import { withLatestFrom, share, mergeMap, filter, pluck } from "rxjs/operators"
+var buildVanilla = ({ config, watch }) =>
+	rxjs.Observable.create(observer => {
+		const entry = path.resolve(process.cwd(), config.vanilla.entry);
+		const staticEntry = config.vanilla.static ? path.resolve(process.cwd(), config.vanilla.static) : null;
+		const output = path.resolve(process.cwd(), config.output);
 
-// import {
-// 	qextConfig,
-// 	authenticate,
-// 	deleteDist,
-// 	defineWebpack,
-// 	build,
-// 	zip,
-// 	uploadExtension,
-// 	deployToDesktop,
-// } from "./components"
+		const copySrcFiles = fs__default.copy(entry, output);
+		const copyStaticFiles = copySrcFiles.then(() =>
+			staticEntry !== null
+				? fs__default.copy(staticEntry, `${output}/${config.vanilla.static}`)
+				: new Promise(resolve => resolve("no static directory"))
+		);
 
-// import program from "commander"
+		if (watch) {
+			const copyFiles = () => {
+				const deleteOutput = fs__default.remove(output);
+				const copySrcFiles = deleteOutput.then(() => fs__default.copy(entry, output));
 
-// program.option("-w, --watch", "Watch").parse(process.argv)
+				const copyStaticFiles = copySrcFiles.then(() =>
+					staticEntry !== null
+						? fs__default.copy(staticEntry, `${output}/${config.vanilla.static}`)
+						: new Promise(resolve => resolve("no static directory"))
+				);
+
+				copyStaticFiles.then(() => {
+					observer.next({ config, message: "vanilla built" });
+				});
+			};
+
+			fs__default.watch(entry, { recursive: true }, copyFiles);
+			if (staticEntry !== null) fs__default.watch(staticEntry, { recursive: true }, copyFiles);
+		} else {
+			copyStaticFiles.then(() => {
+				observer.next({ config, message: "vanilla built" });
+				observer.complete();
+			});
+		}
+	}).pipe(
+		operators.tap(({ message }) => console.log(`${message}\n`)),
+		operators.map(({ config, message }) => config)
+	);
+
+var buildCompile = ({ config, watch }) =>
+	rxjs.Observable.create(observer => {
+		const webpackConfig = {
+			entry: [config.compile.entry],
+			output: {
+				path: path.resolve(process.cwd(), `${config.output}/${config.extension}`),
+				filename: `${config.extension}.js`,
+			},
+			mode: "production",
+			module: {
+				rules: [
+					{
+						test: /\.js$/,
+						exclude: /node_modules/,
+						loader: "babel-loader",
+						options: {
+							presets: ["@babel/preset-env"],
+							plugins: ["@babel/plugin-proposal-object-rest-spread", "@babel/plugin-transform-modules-commonjs"],
+						},
+					},
+					{ test: /\.html$/, loader: "html-loader" },
+					{ test: /\.css$/, use: [{ loader: "style-loader" }, { loader: "css-loader" }] },
+				],
+			},
+			plugins: [
+				new CopyWebpackPlugin([
+					{
+						from: path.resolve(process.cwd(), config.compile.qext),
+						to: path.resolve(process.cwd(), `${config.output}/${config.extension}/${config.extension}.qext`),
+					},
+				]),
+			],
+		};
+
+		const compiler = webpack(webpackConfig);
+
+		if (watch) {
+			compiler.watch({}, (err, stats) => {
+				console.log("[webpack:build]", stats.toString({ colors: true }), "\n");
+
+				observer.next({ config, message: "built" });
+				if (err !== null) observer.error(err);
+			});
+		} else {
+			compiler.run((err, stats) => {
+				console.log("[webpack:build]", stats.toString({ colors: true }), "\n");
+
+				if (err !== null) observer.error(err);
+
+				observer.next({ config, message: "built" });
+				observer.complete();
+			});
+		}
+	});
+
+program.option("-w, --watch", "Watch").parse(process.argv);
 
 /* Get Config */
 const configFile = "./qext.config.json";
@@ -168,14 +256,30 @@ const authenticated$ = validateQextConfig$.pipe(
 );
 
 /** Remove Dist folder */
-const removeDist$ = authenticated$.pipe(operators.switchMap(config => rxjs.from(fsExtra.remove(config.output)).pipe(operators.mapTo(config))));
+const removeDist$ = authenticated$.pipe(operators.switchMap(config => rxjs.from(fs.remove(config.output)).pipe(operators.mapTo(config))));
 
-rxjs.merge(removeDist$).subscribe(
-	next => {
-		// console.log(next)
-	},
-	err => console.error(err)
+const build$ = removeDist$.pipe(
+	operators.switchMap(config => {
+		if (config.vanilla) return buildVanilla({ config, watch: program.watch })
+		else if (config.compile) return buildCompile({ config, watch: program.watch })
+	})
 );
+
+build$.subscribe(console.log, console.error);
+// /** Define Webpack */
+// const webpack$ = authenticated$
+
+// combineLatest(removeDist$, webpack$).subscribe(console.log)
+// console.log,
+// console.error
+// .pipe(build(([removeDist, { webpack, config }]) => ({ compiler: webpack, config, watch: program.watch })))
+
+// merge(removeDist$).subscribe(
+// 	next => {
+// 		// console.log(next)
+// 	},
+// 	err => console.error(err)
+// )
 
 // const qextConfig$ = of(configFile).pipe(
 // 	qextConfig(),

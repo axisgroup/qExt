@@ -18,6 +18,7 @@ export default configFile =>
 				output: string().required(),
 				vanilla: object({
 					entry: string().required(),
+					static: string(),
 				}),
 				compile: object({
 					entry: string().required(),
