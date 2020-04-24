@@ -8,7 +8,9 @@ describe("authenticate", function() {
 	it("should not prompt for authentication if serverDeploy.windowsAuth not set", done => {
 		const extensionDir = path.resolve(__dirname, "./no-authentication")
 		execQextScripts(extensionDir, (error, stdout, stderr) => {
-			stderr.should.equal("")
+			stderr.should.equal(
+				"{ authenticate: true,\n  config:\n   { extension: 'example',\n     output: './dist',\n     compile: { entry: './src/index.js', qext: './src/index.qext' },\n     serverDeploy:\n      { host: '172.16.84.100',\n        isSecure: true,\n        allowSelfSignedSignature: true } } }\n"
+			)
 			done()
 		})
 	})
