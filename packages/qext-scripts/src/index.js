@@ -7,7 +7,7 @@ import delve from "dlv"
 
 import { validateQextConfig } from "./validate"
 import { authenticate } from "./authenticate"
-import { buildVanilla, buildCompile } from "./build"
+import { buildVanilla, buildCompile, zip } from "./build"
 
 // import { of, iif, merge, BehaviorSubject } from "rxjs"
 // import { withLatestFrom, share, mergeMap, filter, pluck } from "rxjs/operators"
@@ -63,7 +63,8 @@ const build$ = removeDist$.pipe(
 	})
 )
 
-build$.subscribe(console.log, console.error)
+const zip$ = build$.pipe(switchMap(zip))
+zip$.subscribe(console.log, console.error)
 // /** Define Webpack */
 // const webpack$ = authenticated$
 

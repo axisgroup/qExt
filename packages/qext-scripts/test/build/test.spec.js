@@ -245,4 +245,20 @@ describe("build", function() {
 			})
 		})
 	})
+
+	describe("zip", function() {
+		it("should zip the distribution extension directory", done => {
+			const extensionDir = path.resolve(__dirname, "./zip")
+			const distDir = `${extensionDir}/dist`
+
+			execQextScripts(extensionDir, (err, stdout, stderr) => {
+				const zipFileExists = fs.pathExists(`${distDir}/example.zip`)
+
+				zipFileExists.then(res => {
+					res.should.equal(true)
+					done()
+				})
+			})
+		})
+	})
 })

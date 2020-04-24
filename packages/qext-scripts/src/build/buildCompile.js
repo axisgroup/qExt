@@ -2,6 +2,7 @@ import { Observable } from "rxjs"
 import webpack from "webpack"
 import CopyWebpackPlugin from "copy-webpack-plugin"
 import path from "path"
+import { tap, map } from "rxjs/operators"
 
 export default ({ config, watch }) =>
 	Observable.create(observer => {
@@ -64,4 +65,7 @@ export default ({ config, watch }) =>
 				observer.complete()
 			})
 		}
-	})
+	}).pipe(
+		tap(({ message }) => console.log(`${message}\n`)),
+		map(({ config }) => config)
+	)

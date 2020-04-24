@@ -14,6 +14,7 @@ var prompt = _interopDefault(require('prompt'));
 var path = _interopDefault(require('path'));
 var webpack = _interopDefault(require('webpack'));
 var CopyWebpackPlugin = _interopDefault(require('copy-webpack-plugin'));
+var zipdir = _interopDefault(require('zip-dir'));
 var program = _interopDefault(require('commander'));
 
 var validateQextConfig = configFile =>
@@ -232,6 +233,22 @@ var buildCompile = ({ config, watch }) =>
 				observer.complete();
 			});
 		}
+	}).pipe(
+		operators.tap(({ message }) => console.log(`${message}\n`)),
+		operators.map(({ config }) => config)
+	);
+
+var zip = config =>
+	rxjs.Observable.create(observer => {
+		const outputDir = path.resolve(process.cwd(), config.output);
+		const inputDir = `${outputDir}/${config.extension}`;
+
+		zipdir(inputDir, { saveTo: `${outputDir}/${config.extension}.zip` }, (err, buffer) => {
+			if (err !== null) observer.error(err);
+
+			observer.next(config);
+			observer.complete();
+		});
 	});
 
 program.option("-w, --watch", "Watch").parse(process.argv);
@@ -272,8 +289,8 @@ const build$ = removeDist$.pipe(
 	})
 );
 
-// const zip$ = build$.pipe(switchMap(zip))
-build$.subscribe(console.log, console.error);
+const zip$ = build$.pipe(operators.switchMap(zip));
+zip$.subscribe(console.log, console.error);
 // /** Define Webpack */
 // const webpack$ = authenticated$
 
