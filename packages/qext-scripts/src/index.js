@@ -67,12 +67,18 @@ const build$ = removeDist$.pipe(
 /** Zip */
 const zip$ = build$.pipe(switchMap(zip))
 
-const deploy$ = zip$.pipe(
+const deployToServer$ = zip$.pipe(
 	filter(config => config.serverDeploy !== undefined),
 	switchMap(deployToServer)
 )
 
-deploy$.subscribe(console.log, console.error)
+deployToServer$.subscribe(() => {}, console.error)
+
+process.on("SIGINT", () => {
+	console.info(`\nqExt Ended`)
+	process.exit()
+})
+
 // /** Define Webpack */
 // const webpack$ = authenticated$
 
