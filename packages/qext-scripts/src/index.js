@@ -10,20 +10,6 @@ import { authenticate } from "./authenticate"
 import { buildVanilla, buildCompile, zip } from "./build"
 import { deployToServer } from "./deploy"
 
-// import { of, iif, merge, BehaviorSubject } from "rxjs"
-// import { withLatestFrom, share, mergeMap, filter, pluck } from "rxjs/operators"
-
-// import {
-// 	qextConfig,
-// 	authenticate,
-// 	deleteDist,
-// 	defineWebpack,
-// 	build,
-// 	zip,
-// 	uploadExtension,
-// 	deployToDesktop,
-// } from "./components"
-
 import program from "commander"
 
 program.option("-w, --watch", "Watch").parse(process.argv)

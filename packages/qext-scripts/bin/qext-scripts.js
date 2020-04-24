@@ -260,7 +260,6 @@ var deployToServer = config =>
 
 		const http = isSecure ? httpSecure : httpInsecure;
 
-		console.log(session);
 		const headers = session
 			? { "x-qlik-xrfkey": "123456789abcdefg", "content-type": "application/zip", Cookie: `X-Qlik-Session=${session}` }
 			: hdrAuthUser
