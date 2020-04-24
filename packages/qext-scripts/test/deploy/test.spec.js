@@ -6,6 +6,7 @@ const config = require("./deploy-to-server-windows-auth/qext.config.json")
 const path = require("path")
 const should = require("chai").should()
 const execQextScripts = require("../util/exec-qext-scripts")
+const fs = require("fs-extra")
 
 describe("deploy", function() {
 	this.timeout(20000)
@@ -157,6 +158,25 @@ describe("deploy", function() {
 
 			cleanup$.subscribe(() => {
 				done()
+			})
+		})
+	})
+
+	describe("deploy to desktop", function() {
+		it("should deploy extension to desktop location", done => {
+			const extensionDir = path.resolve(__dirname, "./deploy-to-desktop")
+			const desktopDestination = `${extensionDir}/desktop-dest`
+
+			const deleteDesktopDest = fs.remove(desktopDestination)
+
+			deleteDesktopDest.then(() => {
+				execQextScripts(extensionDir, () => {
+					const desktopExtensionExists = fs.pathExists(`${desktopDestination}/example`)
+					desktopExtensionExists.then(res => {
+						res.should.equal(true)
+						done()
+					})
+				})
 			})
 		})
 	})

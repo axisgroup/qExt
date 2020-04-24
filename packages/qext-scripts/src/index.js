@@ -8,7 +8,7 @@ import delve from "dlv"
 import { validateQextConfig } from "./validate"
 import { authenticate } from "./authenticate"
 import { buildVanilla, buildCompile, zip } from "./build"
-import { deployToServer } from "./deploy"
+import { deployToServer, deployToDesktop } from "./deploy"
 
 import program from "commander"
 
@@ -53,9 +53,13 @@ const build$ = removeDist$.pipe(
 /** Zip */
 const zip$ = build$.pipe(switchMap(zip))
 
+/** Deploy */
 const deployToServer$ = zip$.pipe(
-	filter(config => config.serverDeploy !== undefined),
-	switchMap(deployToServer)
+	switchMap(config => {
+		if (config.serverDeploy) return deployToServer(config)
+		else if (config.desktopDeploy) return deployToDesktop(config)
+		else return of(config)
+	})
 )
 
 deployToServer$.subscribe(() => {}, console.error)

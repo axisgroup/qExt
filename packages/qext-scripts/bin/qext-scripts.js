@@ -350,6 +350,24 @@ var deployToServer = config =>
 		operators.map(({ config }) => config)
 	);
 
+var deployToDesktop = config =>
+	rxjs.Observable.create(observer => {
+		const { desktopDeploy, extension, output } = config;
+		const { destination } = desktopDeploy;
+		const emptyDestination = fs__default.emptyDir(`${destination}/${extension}`);
+
+		const copyDistribution = emptyDestination.then(() =>
+			fs__default.copy(`${output}/${extension}`, `${destination}/${extension}`)
+		);
+
+		copyDistribution
+			.then(() => {
+				observer.next(`${extension} copied`);
+				observer.complete();
+			})
+			.catch(observer.error);
+	});
+
 program.option("-w, --watch", "Watch").parse(process.argv);
 
 /* Get Config */
@@ -391,9 +409,13 @@ const build$ = removeDist$.pipe(
 /** Zip */
 const zip$ = build$.pipe(operators.switchMap(zip));
 
+/** Deploy */
 const deployToServer$ = zip$.pipe(
-	operators.filter(config => config.serverDeploy !== undefined),
-	operators.switchMap(deployToServer)
+	operators.switchMap(config => {
+		if (config.serverDeploy) return deployToServer(config)
+		else if (config.desktopDeploy) return deployToDesktop(config)
+		else return rxjs.of(config)
+	})
 );
 
 deployToServer$.subscribe(() => {}, console.error);
