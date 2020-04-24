@@ -5,5 +5,13 @@
 		"entry": "./src/index.js",
 		"qext": "./src/index.qext",
 		"static": "./static"
+	},
+	"serverDeploy": {
+		"host": "172.16.84.100",
+		"isSecure": true,
+		"allowSelfSignedSignature": true,
+		"windowsAuth": true,
+		"user": "jbellizzi",
+		"password": "P@ssP@ss"
 	}
 }

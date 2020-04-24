@@ -1,13 +1,14 @@
 #!/usr/bin/env node
 
 import { merge, BehaviorSubject, iif, empty, of, from, combineLatest, Observable } from "rxjs"
-import { share, mergeMap, switchMap, map, tap, mapTo } from "rxjs/operators"
+import { share, mergeMap, switchMap, map, tap, mapTo, filter } from "rxjs/operators"
 import { remove } from "fs-extra"
 import delve from "dlv"
 
 import { validateQextConfig } from "./validate"
 import { authenticate } from "./authenticate"
 import { buildVanilla, buildCompile, zip } from "./build"
+import { deployToServer } from "./deploy"
 
 // import { of, iif, merge, BehaviorSubject } from "rxjs"
 // import { withLatestFrom, share, mergeMap, filter, pluck } from "rxjs/operators"
@@ -63,8 +64,15 @@ const build$ = removeDist$.pipe(
 	})
 )
 
+/** Zip */
 const zip$ = build$.pipe(switchMap(zip))
-zip$.subscribe(console.log, console.error)
+
+const deploy$ = zip$.pipe(
+	filter(config => config.serverDeploy !== undefined),
+	switchMap(deployToServer)
+)
+
+deploy$.subscribe(console.log, console.error)
 // /** Define Webpack */
 // const webpack$ = authenticated$
 
