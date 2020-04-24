@@ -1,0 +1,7 @@
+{
+	"extension": "example",
+	"output": "./dist",
+	"vanilla": {
+		"entry": "./src"
+	}
+}

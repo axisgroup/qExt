@@ -1,0 +1,12 @@
+{
+	"extension": "test-extension",
+	"output": "./dist",
+	"vanilla": {
+		"entry": "./src"
+	},
+	"serverDeploy": {
+		"host": "172.16.84.100",
+		"hdrAuthUser": "domain/hdr-usr",
+		"windowsAuth": true
+	}
+}
