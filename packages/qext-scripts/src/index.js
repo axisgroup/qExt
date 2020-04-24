@@ -7,7 +7,7 @@ import delve from "dlv"
 
 import { validateQextConfig } from "./validate"
 import { authenticate } from "./authenticate"
-import { defineWebpack, build, buildVanilla, buildCompile } from "./build"
+import { buildVanilla, buildCompile } from "./build"
 
 // import { of, iif, merge, BehaviorSubject } from "rxjs"
 // import { withLatestFrom, share, mergeMap, filter, pluck } from "rxjs/operators"

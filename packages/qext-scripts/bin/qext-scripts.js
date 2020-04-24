@@ -11,10 +11,9 @@ var delve = _interopDefault(require('dlv'));
 var joi = require('@hapi/joi');
 var child_process = require('child_process');
 var prompt = _interopDefault(require('prompt'));
-var CopyWebpackPlugin = _interopDefault(require('copy-webpack-plugin'));
-require('disable-output-webpack-plugin');
 var path = _interopDefault(require('path'));
 var webpack = _interopDefault(require('webpack'));
+var CopyWebpackPlugin = _interopDefault(require('copy-webpack-plugin'));
 var program = _interopDefault(require('commander'));
 
 var validateQextConfig = configFile =>
@@ -273,6 +272,7 @@ const build$ = removeDist$.pipe(
 	})
 );
 
+// const zip$ = build$.pipe(switchMap(zip))
 build$.subscribe(console.log, console.error);
 // /** Define Webpack */
 // const webpack$ = authenticated$
