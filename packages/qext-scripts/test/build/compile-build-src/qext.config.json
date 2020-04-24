@@ -3,7 +3,6 @@
 	"output": "./dist",
 	"compile": {
 		"entry": "./src/index.js",
-		"qext": "./src/index.qext",
-		"static": "./static"
+		"qext": "./src/index.qext"
 	}
 }

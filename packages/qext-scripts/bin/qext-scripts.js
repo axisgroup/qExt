@@ -202,6 +202,14 @@ var buildCompile = ({ config, watch }) =>
 						from: path.resolve(process.cwd(), config.compile.qext),
 						to: path.resolve(process.cwd(), `${config.output}/${config.extension}/${config.extension}.qext`),
 					},
+					...(config.compile.static
+						? [
+								{
+									from: path.resolve(process.cwd(), config.compile.static),
+									to: path.resolve(process.cwd(), `${config.output}/${config.extension}/static`),
+								},
+						  ]
+						: []),
 				]),
 			],
 		};
