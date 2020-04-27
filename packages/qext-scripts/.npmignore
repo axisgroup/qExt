@@ -1,3 +1,4 @@
 *.tgz
 test/
 node_modules/
+example/

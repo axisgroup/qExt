@@ -167,6 +167,32 @@ describe("build", function() {
 			})
 		})
 
+		it("should compile css resources", done => {
+			const extensionDir = path.resolve(__dirname, "./compile-css")
+			const output = path.resolve(extensionDir, "./dist")
+			const deleteDist = fs.remove(output)
+
+			deleteDist.then(() => {
+				execQextScripts(extensionDir, (error, stdout, stderr) => {
+					stderr.should.equal("")
+					done()
+				})
+			})
+		})
+
+		it("should compile html resources", done => {
+			const extensionDir = path.resolve(__dirname, "./compile-html")
+			const output = path.resolve(extensionDir, "./dist")
+			const deleteDist = fs.remove(output)
+
+			deleteDist.then(() => {
+				execQextScripts(extensionDir, (error, stdout, stderr) => {
+					stderr.should.equal("")
+					done()
+				})
+			})
+		})
+
 		it("should watch and compile the src directory", done => {
 			const extensionDir = path.resolve(__dirname, "./compile-build-src")
 			const entry = path.resolve(extensionDir, "./src/index.js")
