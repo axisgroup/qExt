@@ -5,7 +5,9 @@
 	"main": "index.js",
 	"scripts": {
 		"build": "qext-scripts",
-		"watch": "qext-scripts -w"
+		"watch": "qext-scripts -w",
+		"deploy": "qext-scripts -d",
+		"watch-deploy": "qext-scripts -w -d"
 	},
 	"keywords": [],
 	"author": "",

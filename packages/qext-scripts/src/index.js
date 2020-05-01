@@ -12,7 +12,10 @@ import { deployToServer, deployToDesktop } from "./deploy"
 
 import program from "commander"
 
-program.option("-w, --watch", "Watch").parse(process.argv)
+program
+	.option("-w, --watch", "Watch")
+	.option("-d, --deploy", "Deploy")
+	.parse(process.argv)
 
 /* Get Config */
 const configFile = "./qext.config.json"
@@ -25,7 +28,7 @@ const authenticated$ = validateQextConfig$.pipe(
 	mergeMap(config =>
 		iif(
 			/** if deploying with windowsAuth */
-			() => delve(config, "serverDeploy.windowsAuth", false),
+			() => delve(config, "serverDeploy.windowsAuth", false) && program.deploy,
 
 			/** Authenticate */
 			authenticate(config),
@@ -53,8 +56,8 @@ const zip$ = build$.pipe(switchMap(zip))
 /** Deploy */
 const deploy$ = zip$.pipe(
 	switchMap(config => {
-		if (config.serverDeploy) return deployToServer(config)
-		else if (config.desktopDeploy) return deployToDesktop(config)
+		if (config.serverDeploy && program.deploy) return deployToServer(config)
+		else if (config.desktopDeploy && program.deploy) return deployToDesktop(config)
 		else return of(config)
 	})
 )
