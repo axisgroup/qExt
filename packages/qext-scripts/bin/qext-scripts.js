@@ -136,7 +136,8 @@ var buildVanilla = ({ config, watch }) =>
 	rxjs.Observable.create(observer => {
 		const entry = path.resolve(process.cwd(), config.vanilla.entry);
 		const staticEntry = config.vanilla.static ? path.resolve(process.cwd(), config.vanilla.static) : null;
-		const output = path.resolve(process.cwd(), config.output);
+		const dist = path.resolve(process.cwd(), config.output);
+		const output = `${dist}/${config.extension}`;
 
 		const copySrcFiles = fs__default.copy(entry, output);
 		const copyStaticFiles = copySrcFiles.then(() =>
@@ -147,7 +148,7 @@ var buildVanilla = ({ config, watch }) =>
 
 		if (watch) {
 			const copyFiles = () => {
-				const deleteOutput = fs__default.remove(output);
+				const deleteOutput = fs__default.remove(dist);
 				const copySrcFiles = deleteOutput.then(() => fs__default.copy(entry, output));
 
 				const copyStaticFiles = copySrcFiles.then(() =>
@@ -368,7 +369,10 @@ var deployToDesktop = config =>
 			.catch(observer.error);
 	});
 
-program.option("-w, --watch", "Watch").parse(process.argv);
+program
+	.option("-w, --watch", "Watch")
+	.option("-d, --deploy", "Deploy")
+	.parse(process.argv);
 
 /* Get Config */
 const configFile = "./qext.config.json";
@@ -381,7 +385,7 @@ const authenticated$ = validateQextConfig$.pipe(
 	operators.mergeMap(config =>
 		rxjs.iif(
 			/** if deploying with windowsAuth */
-			() => delve(config, "serverDeploy.windowsAuth", false),
+			() => delve(config, "serverDeploy.windowsAuth", false) && program.deploy,
 
 			/** Authenticate */
 			authenticate(config),
@@ -409,8 +413,8 @@ const zip$ = build$.pipe(operators.switchMap(zip));
 /** Deploy */
 const deploy$ = zip$.pipe(
 	operators.switchMap(config => {
-		if (config.serverDeploy) return deployToServer(config)
-		else if (config.desktopDeploy) return deployToDesktop(config)
+		if (config.serverDeploy && program.deploy) return deployToServer(config)
+		else if (config.desktopDeploy && program.deploy) return deployToDesktop(config)
 		else return rxjs.of(config)
 	})
 );

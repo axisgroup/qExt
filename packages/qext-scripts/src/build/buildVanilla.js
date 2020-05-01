@@ -7,7 +7,8 @@ export default ({ config, watch }) =>
 	Observable.create(observer => {
 		const entry = path.resolve(process.cwd(), config.vanilla.entry)
 		const staticEntry = config.vanilla.static ? path.resolve(process.cwd(), config.vanilla.static) : null
-		const output = path.resolve(process.cwd(), config.output)
+		const dist = path.resolve(process.cwd(), config.output)
+		const output = `${dist}/${config.extension}`
 
 		const copySrcFiles = fs.copy(entry, output)
 		const copyStaticFiles = copySrcFiles.then(() =>
@@ -18,7 +19,7 @@ export default ({ config, watch }) =>
 
 		if (watch) {
 			const copyFiles = () => {
-				const deleteOutput = fs.remove(output)
+				const deleteOutput = fs.remove(dist)
 				const copySrcFiles = deleteOutput.then(() => fs.copy(entry, output))
 
 				const copyStaticFiles = copySrcFiles.then(() =>

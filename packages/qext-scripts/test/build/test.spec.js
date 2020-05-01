@@ -10,11 +10,12 @@ describe("build", function() {
 	describe("vanilla builds", function() {
 		it("should copy the input directory into the output directory in vanilla build", done => {
 			const extensionDir = path.resolve(__dirname, "./vanilla-build-src")
-			const deleteDist = fs.remove(path.resolve(__dirname, `./vanilla-build-src/dist`))
+			const dist = `${extensionDir}/dist`
+			const output = `${dist}/example`
+			const deleteDist = fs.remove(dist)
 
 			deleteDist.then(() => {
 				execQextScripts(extensionDir, (error, stdout, stderr) => {
-					const output = path.resolve(__dirname, `./vanilla-build-src/dist`)
 					const distExists = fs.pathExists(output)
 					const indexExists = fs.pathExists(`${output}/index.js`)
 
@@ -29,11 +30,12 @@ describe("build", function() {
 
 		it("should copy the static directory into the output directory when defined in vanilla config", done => {
 			const extensionDir = path.resolve(__dirname, "./vanilla-build-static")
-			const deleteDist = fs.remove(path.resolve(__dirname, `./vanilla-build-static/dist`))
+			const dist = `${extensionDir}/dist`
+			const output = `${dist}/example`
+			const deleteDist = fs.remove(dist)
 
 			deleteDist.then(() => {
 				execQextScripts(extensionDir, (error, stdout, stderr) => {
-					const output = path.resolve(__dirname, `./vanilla-build-static/dist`)
 					const distExists = fs.pathExists(output)
 					const indexExists = fs.pathExists(`${output}/index.js`)
 					const staticExists = fs.pathExists(`${output}/static`)
@@ -52,10 +54,10 @@ describe("build", function() {
 
 		it("should watch the input src directory in watch mode", done => {
 			const extensionDir = path.resolve(__dirname, "./vanilla-build-src")
-			const deleteDist = fs.remove(path.resolve(__dirname, `./vanilla-build-src/dist`))
-
 			const entry = path.resolve(extensionDir, `./src`)
-			const output = path.resolve(extensionDir, `./dist`)
+			const dist = `${extensionDir}/dist`
+			const output = `${dist}/example`
+			const deleteDist = fs.remove(dist)
 
 			const initializeIndexFile = fs.writeFile(`${entry}/index.js`, "const a = 1", "utf8")
 
@@ -92,10 +94,10 @@ describe("build", function() {
 
 		it("should watch the input static directory in watch mode", done => {
 			const extensionDir = path.resolve(__dirname, "./vanilla-build-static")
-			const deleteDist = fs.remove(path.resolve(extensionDir, "./dist"))
-
-			const entry = path.resolve(extensionDir, "./static")
-			const output = path.resolve(extensionDir, "./dist")
+			const entry = `${extensionDir}/static`
+			const dist = `${extensionDir}/dist`
+			const output = `${dist}/example`
+			const deleteDist = fs.remove(dist)
 
 			const initializeFile = fs.writeFile(`${entry}/file.txt`, "a", "utf8")
 

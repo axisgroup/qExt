@@ -1,9 +1,8 @@
 {
 	"extension": "example",
 	"output": "./dist",
-	"compile": {
-		"entry": "./src/index.js",
-		"qext": "./src/index.qext"
+	"vanilla": {
+		"entry": "./src"
 	},
 	"desktopDeploy": {
 		"destination": "./desktop-dest"
