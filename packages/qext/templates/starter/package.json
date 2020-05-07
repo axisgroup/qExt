@@ -3,7 +3,10 @@
 	"version": "0.1.0",
 	"description": "",
 	"scripts": {
-		"qext-scripts": "qext-scripts"
+		"build": "qext-scripts",
+		"watch": "qext-scripts -w",
+		"deploy": "qext-scripts -d",
+		"watch-deploy": "qext-scripts -w -d"
 	},
 	"keywords": [],
 	"author": "",

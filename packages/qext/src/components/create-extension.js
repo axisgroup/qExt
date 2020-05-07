@@ -14,14 +14,9 @@ export default ({ extensionName, templateType }) => {
 		.readJson(qextPackageJsonPath)
 		.then(qextPackageJson => qextPackageJson.qextScriptsVersion)
 
-	/**
-	 * PACKAGE JSON
-	 */
+	/** PACKAGE JSON */
 	const templatePackageJsonPath = path.join(templateFiles, "package.json")
-	const createPackageJson = Promise.all([
-		fs.readJson(templatePackageJsonPath),
-		qextScriptsVersion_Pr,
-	])
+	const createPackageJson = Promise.all([fs.readJson(templatePackageJsonPath), qextScriptsVersion_Pr])
 		.then(([packageObj, qextScriptsVersion]) => ({
 			...packageObj,
 			name: extensionName,
@@ -41,9 +36,7 @@ export default ({ extensionName, templateType }) => {
 		)
 		.catch(console.error)
 
-	/**
-	 * QEXT CONFIG
-	 */
+	/** QEXT CONFIG */
 	const templateQextConfigPath = path.join(templateFiles, "qext.config.json")
 	const createQextConfigFile = fs
 		.readJson(templateQextConfigPath)
@@ -62,18 +55,10 @@ export default ({ extensionName, templateType }) => {
 		)
 		.catch(console.error)
 
-	/**
-	 * STATIC
-	 */
-	createRootDirectory
-		.then(() => fs.ensureDir(path.join(rootPath, "static")))
-		.catch(console.error)
+	/** STATIC */
+	createRootDirectory.then(() => fs.ensureDir(path.join(rootPath, "static"))).catch(console.error)
 
-	/**
-	 * SOURCE
-	 */
+	/** SOURCE */
 	const templateSrcPath = path.join(templateFiles, "src")
-	createRootDirectory
-		.then(() => fs.copy(templateSrcPath, path.join(rootPath, "src")))
-		.catch(console.error)
+	createRootDirectory.then(() => fs.copy(templateSrcPath, path.join(rootPath, "src"))).catch(console.error)
 }
