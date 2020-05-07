@@ -1,6 +1,6 @@
 {
 	"name": "qext",
-	"version": "2.0.0-beta.0",
+	"version": "2.0.0-beta.1",
 	"description": "",
 	"main": "index.js",
 	"bin": {
@@ -11,7 +11,9 @@
 		"build": "rollup -c",
 		"watch": "rollup -c -w",
 		"test": "mocha './test/**/*.spec.js'",
-		"test-only": "mocha"
+		"test-only": "mocha",
+		"update-version-beta": "npm version prerelease --preid=beta",
+		"publish-beta": "npm publish --tag beta"
 	},
 	"preferGlobal": true,
 	"keywords": [],
