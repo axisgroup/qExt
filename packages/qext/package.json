@@ -6,7 +6,7 @@
 	"bin": {
 		"qext": "./bin/qext.js"
 	},
-	"qextScriptsVersion": "1.0.0-beta.3",
+	"qextScriptsVersion": "2.1.0-beta.0",
 	"scripts": {
 		"build": "rollup -c",
 		"watch": "rollup -c -w",
