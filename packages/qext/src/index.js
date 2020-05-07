@@ -19,7 +19,7 @@ version.then(version => {
 		.parse(process.argv)
 
 	if (!program.createExtension) {
-		return console.error(`set "-c, --create-extension <name>" flag to create extension`)
+		return console.error('set "-c, --create-extension <name>" flag to create extension')
 	} else {
 		createExtension({ extensionName: program.createExtension, templateType: program.template })
 

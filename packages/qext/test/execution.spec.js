@@ -13,9 +13,7 @@ describe("Execute qext", function() {
 	/** --create-extension flag not on */
 	it("should prompt if --create-extension argument not set", done => {
 		exec(`node "${qext}"`, (error, stdout, stderr) => {
-			stderr.should.equal(
-				'set "-c, --create-extension <name>" flag to create extension\n'
-			)
+			stderr.should.equal('set "-c, --create-extension <name>" flag to create extension\n')
 
 			done()
 		})
@@ -24,9 +22,7 @@ describe("Execute qext", function() {
 	/** --create-extension flag no value */
 	it("should prompt if --create-extension flag on with no value", done => {
 		exec(`node "${qext}" -c`, (error, stdout, stderr) => {
-			stderr.should.equal(
-				"error: option `-c, --create-extension <name>' argument missing\n"
-			)
+			stderr.should.equal("error: option '-c, --create-extension <name>' argument missing\n")
 
 			done()
 		})
@@ -35,14 +31,10 @@ describe("Execute qext", function() {
 	describe("Create Extension Files", function() {
 		before("creating extension files", () => {
 			return new Promise((resolve, reject) => {
-				exec(
-					`node "${qext}" -c ${extensionName}`,
-					{ cwd: testDir },
-					(error, stdout, stderr) => {
-						console.log(stdout)
-						resolve()
-					}
-				)
+				exec(`node "${qext}" -c ${extensionName}`, { cwd: testDir }, (error, stdout, stderr) => {
+					console.log(stdout)
+					resolve()
+				})
 			})
 		})
 

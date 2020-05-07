@@ -23,6 +23,8 @@
 	},
 	"devDependencies": {
 		"@rollup/plugin-commonjs": "^11.1.0",
+		"chai": "^4.2.0",
+		"mocha": "^7.1.2",
 		"rollup": "^2.8.2",
 		"rollup-plugin-hashbang": "^2.2.2"
 	}
