@@ -34,6 +34,7 @@ export default configFile =>
 					isSecure: bool().default(true),
 					allowSelfSignedSignature: bool().default(false),
 					hdrAuthUser: string(),
+					hdrAuthHeaderName: string(),
 					windowsAuth: bool().valid(true),
 					user: string(),
 					password: string(),

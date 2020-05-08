@@ -70,6 +70,7 @@ var validateQextConfig = configFile =>
 					isSecure: joi.bool().default(true),
 					allowSelfSignedSignature: joi.bool().default(false),
 					hdrAuthUser: joi.string(),
+					hdrAuthHeaderName: joi.string(),
 					windowsAuth: joi.bool().valid(true),
 					user: joi.string(),
 					password: joi.string(),
@@ -300,14 +301,18 @@ var zip = config =>
 var deployToServer = config =>
 	rxjs.Observable.create(observer => {
 		const { serverDeploy, session } = config;
-		const { isSecure, hdrAuthUser, allowSelfSignedSignature, host, port } = serverDeploy;
+		const { isSecure, hdrAuthUser, hdrAuthHeaderName, allowSelfSignedSignature, host, port } = serverDeploy;
 
 		const http = isSecure ? httpSecure : httpInsecure;
 
 		const headers = session
 			? { "x-qlik-xrfkey": "123456789abcdefg", "content-type": "application/zip", Cookie: `X-Qlik-Session=${session}` }
 			: hdrAuthUser
-			? { "x-qlik-xrfkey": "123456789abcdefg", "content-type": "application/zip", "hdr-usr": hdrAuthUser }
+			? {
+					"x-qlik-xrfkey": "123456789abcdefg",
+					"content-type": "application/zip",
+					[hdrAuthHeaderName ? hdrAuthHeaderName : "hdr-usr"]: hdrAuthUser,
+			  }
 			: { "x-qlik-xrfkey": "123456789abcdefg", "content-type": "application/zip" };
 
 		const options = {
@@ -334,7 +339,10 @@ var deployToServer = config =>
 							.on("end", () => {
 								const { statusCode, statusMessage } = res;
 								if (statusCode === 403) {
-									observer.error({ authenticate: true, config });
+									observer.error({
+										message: `${statusCode}: ${statusMessage}`,
+										//  authenticate: true, config
+									});
 								} else if (statusCode === 400) {
 									observer.next({ message: "not found", config, options, http });
 									observer.complete();

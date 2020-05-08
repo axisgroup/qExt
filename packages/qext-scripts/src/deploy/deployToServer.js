@@ -8,14 +8,18 @@ import fs from "fs-extra"
 export default config =>
 	Observable.create(observer => {
 		const { serverDeploy, session } = config
-		const { isSecure, hdrAuthUser, allowSelfSignedSignature, host, port } = serverDeploy
+		const { isSecure, hdrAuthUser, hdrAuthHeaderName, allowSelfSignedSignature, host, port } = serverDeploy
 
 		const http = isSecure ? httpSecure : httpInsecure
 
 		const headers = session
 			? { "x-qlik-xrfkey": "123456789abcdefg", "content-type": "application/zip", Cookie: `X-Qlik-Session=${session}` }
 			: hdrAuthUser
-			? { "x-qlik-xrfkey": "123456789abcdefg", "content-type": "application/zip", "hdr-usr": hdrAuthUser }
+			? {
+					"x-qlik-xrfkey": "123456789abcdefg",
+					"content-type": "application/zip",
+					[hdrAuthHeaderName ? hdrAuthHeaderName : "hdr-usr"]: hdrAuthUser,
+			  }
 			: { "x-qlik-xrfkey": "123456789abcdefg", "content-type": "application/zip" }
 
 		const options = {
@@ -42,7 +46,10 @@ export default config =>
 							.on("end", () => {
 								const { statusCode, statusMessage } = res
 								if (statusCode === 403) {
-									observer.error({ authenticate: true, config })
+									observer.error({
+										message: `${statusCode}: ${statusMessage}`,
+										//  authenticate: true, config
+									})
 								} else if (statusCode === 400) {
 									observer.next({ message: "not found", config, options, http })
 									observer.complete()

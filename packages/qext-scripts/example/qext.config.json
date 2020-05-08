@@ -3,7 +3,14 @@
 	"output": "./dist",
 	"compile": {
 		"entry": "./src/index.js",
-		"qext": "./src/index.qext",
-		"altWebpackConfig": "./webpack.config.js"
+		"qext": "./src/index.qext"
+	},
+	"serverDeploy": {
+		"host": "172.16.84.100",
+		"prefix": "hdr",
+		"isSecure": true,
+		"allowSelfSignedSignature": true,
+		"hdrAuthUser": "win-jt0r3uds9hc\\qexter",
+		"hdrAuthHeaderName": "hdr-user"
 	}
 }
