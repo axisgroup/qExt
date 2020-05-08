@@ -272,6 +272,34 @@ describe("build", function() {
 				)
 			})
 		})
+
+		it("should hide webpack comments when set webpackComments to false", done => {
+			const extensionDir = path.resolve(__dirname, "./compile-no-comments")
+			const output = `${extensionDir}/dist`
+			const deleteDist = fs.remove(output)
+
+			deleteDist.then(() => {
+				execQextScripts(extensionDir, (error, stdout, stderr) => {
+					stdout.includes("[webpack:build]").should.equal(false)
+					done()
+				})
+			})
+		})
+
+		it("should allow alternate webpack.config.js to be defined and passed in", done => {
+			const extensionDir = path.resolve(__dirname, "./compile-alt-webpack")
+			const output = `${extensionDir}/dist`
+			const deleteDist = fs.remove(output)
+
+			deleteDist.then(() => {
+				execQextScripts(extensionDir, () => {
+					fs.readFile(`${output}/example/example.js`, "utf8").then(content => {
+						content.includes("/*! MY BANNER */").should.equal(true)
+						done()
+					})
+				})
+			})
+		})
 	})
 
 	describe("zip", function() {

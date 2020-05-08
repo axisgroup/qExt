@@ -4,6 +4,6 @@
 	"compile": {
 		"entry": "./src/index.js",
 		"qext": "./src/index.qext",
-		"altWebpackConfig": "./webpack.config.js"
+		"webpackComments": false
 	}
 }

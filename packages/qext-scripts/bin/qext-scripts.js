@@ -3,6 +3,25 @@
 
 function _interopDefault (ex) { return (ex && (typeof ex === 'object') && 'default' in ex) ? ex['default'] : ex; }
 
+function _interopNamespace(e) {
+	if (e && e.__esModule) { return e; } else {
+		var n = {};
+		if (e) {
+			Object.keys(e).forEach(function (k) {
+				var d = Object.getOwnPropertyDescriptor(e, k);
+				Object.defineProperty(n, k, d.get ? d : {
+					enumerable: true,
+					get: function () {
+						return e[k];
+					}
+				});
+			});
+		}
+		n['default'] = e;
+		return n;
+	}
+}
+
 var rxjs = require('rxjs');
 var operators = require('rxjs/operators');
 var fs = require('fs-extra');
@@ -12,8 +31,8 @@ var joi = require('@hapi/joi');
 var child_process = require('child_process');
 var prompt = _interopDefault(require('prompt'));
 var path = _interopDefault(require('path'));
-var webpack = _interopDefault(require('webpack'));
 var CopyWebpackPlugin = _interopDefault(require('copy-webpack-plugin'));
+var webpack = _interopDefault(require('webpack'));
 var zipdir = _interopDefault(require('zip-dir'));
 var httpInsecure = _interopDefault(require('http'));
 var httpSecure = _interopDefault(require('https'));
@@ -41,6 +60,8 @@ var validateQextConfig = configFile =>
 					entry: joi.string().required(),
 					qext: joi.string().required(),
 					static: joi.string(),
+					webpackComments: joi.bool().default(true),
+					altWebpackConfig: joi.string(),
 				}),
 				serverDeploy: joi.object({
 					host: joi.string().required(),
@@ -177,65 +198,87 @@ var buildVanilla = ({ config, watch }) =>
 
 var buildCompile = ({ config, watch }) =>
 	rxjs.Observable.create(observer => {
-		const webpackConfig = {
-			entry: [config.compile.entry],
-			output: {
-				path: path.resolve(process.cwd(), `${config.output}/${config.extension}`),
-				filename: `${config.extension}.js`,
-			},
-			mode: "production",
-			module: {
-				rules: [
-					{
-						test: /\.js$/,
-						exclude: /node_modules/,
-						loader: "babel-loader",
-						options: {
-							presets: ["@babel/preset-env"],
-							plugins: ["@babel/plugin-proposal-object-rest-spread", "@babel/plugin-transform-modules-commonjs"],
-						},
-					},
-					{ test: /\.html$/, loader: "html-loader" },
-					{ test: /\.css$/, use: [{ loader: "style-loader" }, { loader: "css-loader" }] },
-				],
-			},
-			plugins: [
-				new CopyWebpackPlugin([
-					{
-						from: path.resolve(process.cwd(), config.compile.qext),
-						to: path.resolve(process.cwd(), `${config.output}/${config.extension}/${config.extension}.qext`),
-					},
-					...(config.compile.static
-						? [
-								{
-									from: path.resolve(process.cwd(), config.compile.static),
-									to: path.resolve(process.cwd(), `${config.output}/${config.extension}/static`),
-								},
-						  ]
-						: []),
-				]),
-			],
-		};
+		let webpackConfigPr;
 
-		const compiler = webpack(webpackConfig);
-
-		if (watch) {
-			compiler.watch({}, (err, stats) => {
-				console.log("[webpack:build]", stats.toString({ colors: true }), "\n");
-
-				observer.next({ config, message: "built" });
-				if (err !== null) observer.error(err);
+		if (config.compile.altWebpackConfig) {
+			const altWebpackConfigPath = path.resolve(process.cwd(), config.compile.altWebpackConfig);
+			const altWebpackConfig = Promise.resolve().then(function () { return _interopNamespace(require(altWebpackConfigPath)); });
+			webpackConfigPr = altWebpackConfig.then(({ default: defaultExport, named }) => {
+				return defaultExport({
+					entry: config.compile.entry,
+					output: config.output,
+					extension: config.extension,
+					qext: config.compile.qext,
+					static: config.compile.static,
+				})
 			});
 		} else {
-			compiler.run((err, stats) => {
-				console.log("[webpack:build]", stats.toString({ colors: true }), "\n");
-
-				if (err !== null) observer.error(err);
-
-				observer.next({ config, message: "built" });
-				observer.complete();
+			webpackConfigPr = new Promise(res => {
+				res({
+					entry: [config.compile.entry],
+					output: {
+						path: path.resolve(process.cwd(), `${config.output}/${config.extension}`),
+						filename: `${config.extension}.js`,
+					},
+					mode: "production",
+					module: {
+						rules: [
+							{
+								test: /\.js$/,
+								exclude: /node_modules/,
+								loader: "babel-loader",
+								options: {
+									presets: ["@babel/preset-env"],
+									plugins: ["@babel/plugin-proposal-object-rest-spread", "@babel/plugin-transform-modules-commonjs"],
+								},
+							},
+							{ test: /\.html$/, loader: "html-loader" },
+							{ test: /\.css$/, use: [{ loader: "style-loader" }, { loader: "css-loader" }] },
+						],
+					},
+					plugins: [
+						new CopyWebpackPlugin([
+							{
+								from: path.resolve(process.cwd(), config.compile.qext),
+								to: path.resolve(process.cwd(), `${config.output}/${config.extension}/${config.extension}.qext`),
+							},
+							...(config.compile.static
+								? [
+										{
+											from: path.resolve(process.cwd(), config.compile.static),
+											to: path.resolve(process.cwd(), `${config.output}/${config.extension}/static`),
+										},
+								  ]
+								: []),
+						]),
+					],
+				});
 			});
 		}
+
+		webpackConfigPr.then(webpackConfig => {
+			const compiler = webpack(webpackConfig);
+
+			if (watch) {
+				compiler.watch({}, (err, stats) => {
+					if (config.compile.webpackComments !== false)
+						console.log("[webpack:build]", stats.toString({ colors: true }), "\n");
+
+					observer.next({ config, message: "built" });
+					if (err !== null) observer.error(err);
+				});
+			} else {
+				compiler.run((err, stats) => {
+					if (config.compile.webpackComments !== false)
+						console.log("[webpack:build]", stats.toString({ colors: true }), "\n");
+
+					if (err !== null) observer.error(err);
+
+					observer.next({ config, message: "built" });
+					observer.complete();
+				});
+			}
+		});
 	}).pipe(
 		operators.tap(({ message }) => console.log(`${message}\n`)),
 		operators.map(({ config }) => config)

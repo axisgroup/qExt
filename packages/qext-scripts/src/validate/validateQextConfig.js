@@ -24,6 +24,8 @@ export default configFile =>
 					entry: string().required(),
 					qext: string().required(),
 					static: string(),
+					webpackComments: bool().default(true),
+					altWebpackConfig: string(),
 				}),
 				serverDeploy: object({
 					host: string().required(),

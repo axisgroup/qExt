@@ -12,6 +12,7 @@
 		"qext": "node dist/bundle/index.js",
 		"test": "mocha './test/**/test.spec.js'",
 		"test-only": "mocha",
+		"test-spec": "mocha './test/build/test.spec.js' -g 'should hide webpack comments when set webpackComments to false'",
 		"update-version-beta": "npm version prerelease --preid=beta",
 		"publish-beta": "npm publish --tag beta"
 	},
@@ -40,7 +41,7 @@
 		"@rollup/plugin-commonjs": "^11.0.2",
 		"chai": "^4.2.0",
 		"mocha": "^7.1.0",
-		"rollup": "^2.0.5",
+		"rollup": "^2.8.2",
 		"rollup-plugin-hashbang": "^2.2.2"
 	}
 }
