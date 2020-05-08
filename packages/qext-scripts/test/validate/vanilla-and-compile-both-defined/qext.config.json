@@ -1,0 +1,11 @@
+{
+	"extension": "test-extension",
+	"output": "./dist",
+	"vanilla": {
+		"entry": "./src"
+	},
+	"compile": {
+		"entry": "./src/index.js",
+		"qext": "./src/index.qext"
+	}
+}

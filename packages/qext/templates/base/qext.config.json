@@ -1,6 +1,5 @@
 {
 	"extension": "qext-template",
-	"mode": "compile",
 	"output": "./dist",
 	"compile": {
 		"entry": "./src/index.js",

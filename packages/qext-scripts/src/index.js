@@ -1,111 +1,70 @@
-import { of, iif, merge, BehaviorSubject } from "rxjs"
-import {
-	withLatestFrom,
-	share,
-	mergeMap,
-	filter,
-	pluck,
-	tap,
-} from "rxjs/operators"
+#!/usr/bin/env node
 
-import {
-	qextConfig,
-	authenticate,
-	deleteDist,
-	defineWebpack,
-	build,
-	zip,
-	uploadExtension,
-	deployToDesktop,
-} from "./components"
+import { iif, of, from } from "rxjs"
+import { share, mergeMap, switchMap, mapTo } from "rxjs/operators"
+import { remove } from "fs-extra"
+import delve from "dlv"
+
+import { validateQextConfig } from "./validate"
+import { authenticate } from "./authenticate"
+import { buildVanilla, buildCompile, zip } from "./build"
+import { deployToServer, deployToDesktop } from "./deploy"
 
 import program from "commander"
 
-program.option("-w, --watch", "Watch").parse(process.argv)
+program
+	.option("-w, --watch", "Watch")
+	.option("-d, --deploy", "Deploy")
+	.parse(process.argv)
 
 /* Get Config */
 const configFile = "./qext.config.json"
 
-const qextConfig$ = of(configFile).pipe(
-	qextConfig(),
-	share(1)
-)
+/** Validate Qext Config File */
+const validateQextConfig$ = validateQextConfig(configFile).pipe(share(1))
 
-/* Cookie Jar */
-const cookieJar$ = new BehaviorSubject(null)
-
-/* Initialize authentication */
-const authenticate$ = qextConfig$.pipe(
+/** Authentication */
+const authenticated$ = validateQextConfig$.pipe(
 	mergeMap(config =>
 		iif(
-			/* if deploying.. */
-			() => config.authenticate === "windows",
+			/** if deploying with windowsAuth */
+			() => delve(config, "serverDeploy.windowsAuth", false) && program.deploy,
 
-			/* authenticate */
-			authenticate(config, cookieJar$),
+			/** Authenticate */
+			authenticate(config),
 
-			/* else, skip authentication */
-			of("skipping authentication")
+			/** else, skip authentication */
+			of(config)
 		)
 	),
 	share(1)
 )
 
-/* Remove Dist */
-const removeDist$ = authenticate$.pipe(
-	withLatestFrom(qextConfig$),
-	deleteDist(([authStatus, config]) => config.output),
-	share(1)
+/** Remove Dist folder */
+const removeDist$ = authenticated$.pipe(switchMap(config => from(remove(config.output)).pipe(mapTo(config))))
+
+const build$ = removeDist$.pipe(
+	switchMap(config => {
+		if (config.vanilla) return buildVanilla({ config, watch: program.watch })
+		else if (config.compile) return buildCompile({ config, watch: program.watch })
+	})
 )
 
-const webpack$ = removeDist$.pipe(
-	withLatestFrom(qextConfig$),
-	pluck(1),
-	defineWebpack(),
-	share(1)
+/** Zip */
+const zip$ = build$.pipe(switchMap(zip))
+
+/** Deploy */
+const deploy$ = zip$.pipe(
+	switchMap(config => {
+		if (config.serverDeploy && program.deploy) return deployToServer(config)
+		else if (config.desktopDeploy && program.deploy) return deployToDesktop(config)
+		else return of(config)
+	})
 )
 
-/* Build */
-const build$ = webpack$.pipe(
-	withLatestFrom(qextConfig$),
-	build(([webpack, config]) => ({
-		compiler: webpack,
-		config,
-		watch: program.watch,
-	})),
-	share(1)
-)
-
-/* Zip */
-const zip$ = build$.pipe(
-	withLatestFrom(qextConfig$),
-	pluck(1),
-	zip()
-)
-
-/* Upload */
-const upload$ = zip$.pipe(
-	withLatestFrom(qextConfig$),
-	pluck(1),
-	filter(config => config.deploy === "server"),
-	withLatestFrom(cookieJar$),
-	uploadExtension(([config, cookie]) => ({
-		config,
-		cookie,
-	}))
-)
-
-/* Deploy */
-const deployToDesktop$ = build$.pipe(
-	withLatestFrom(qextConfig$),
-	pluck(1),
-	filter(config => config.deploy === "desktop"),
-	deployToDesktop()
-)
-
-merge(upload$, deployToDesktop$).subscribe(() => {}, err => console.error(err))
+deploy$.subscribe(() => {}, console.error)
 
 process.on("SIGINT", () => {
-	console.info("\nqExt Ended.")
+	console.info(`\nqExt Ended`)
 	process.exit()
 })

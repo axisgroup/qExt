@@ -1,0 +1,9 @@
+{
+	"extension": "example",
+	"output": "./dist",
+	"compile": {
+		"entry": "./src/index.js",
+		"qext": "./src/index.qext",
+		"webpackComments": false
+	}
+}

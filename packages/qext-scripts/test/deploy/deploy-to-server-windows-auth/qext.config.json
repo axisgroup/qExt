@@ -1,0 +1,16 @@
+{
+	"extension": "qext-test",
+	"output": "./dist",
+	"compile": {
+		"entry": "./src/index.js",
+		"qext": "./src/index.qext"
+	},
+	"serverDeploy": {
+		"host": "172.16.84.100",
+		"isSecure": true,
+		"allowSelfSignedSignature": true,
+		"windowsAuth": true,
+		"user": "qexter",
+		"password": "P@ssword"
+	}
+}
