@@ -1,0 +1,17 @@
+{
+  "name": "my-extension",
+  "version": "0.1.0",
+  "description": "",
+  "scripts": {
+    "build": "qext-scripts",
+    "watch": "qext-scripts -w",
+    "deploy": "qext-scripts -d",
+    "watch-deploy": "qext-scripts -w -d"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "qext-scripts": "2.0.0"
+  }
+}

@@ -1,14 +1,19 @@
 {
 	"name": "qext-packages",
-	"version": "1.0.3",
+	"version": "2.0.0",
 	"description": "",
 	"scripts": {
 		"git-pull-develop": "git checkout develop && git pull origin master && git push origin develop",
 		"git-pull-beta-release": "git checkout beta-release && git pull origin master && git push origin beta-release",
 		"git-pull-master": "git checkout master && git pull origin master",
-		"git-pull-all": "npm run git-pull-master && npm run git-pull-beta-release && npm run git-pull-develop"
+		"git-pull-all": "npm run git-pull-master && npm run git-pull-beta-release && npm run git-pull-develop",
+		"docs-build": "gitbook build ./docs ./docs/dist/qlik-hooks",
+		"docs-serve": "gitbook serve ./docs"
 	},
 	"keywords": [],
 	"author": "John Bellizzi",
-	"license": "ISC"
+	"license": "ISC",
+	"devDependencies": {
+		"gitbook-cli": "^2.3.2"
+	}
 }

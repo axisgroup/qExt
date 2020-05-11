@@ -1,8 +1,6 @@
-import initialProperties from "./initial-properties"
-import template from "./template.html"
-import definition from "./definition"
-import controller from "./controller"
-import paint from "./paint"
-import resize from "./resize"
-
-export { initialProperties, template, definition, controller, paint, resize }
+export { default as initialProperties } from "./initial-properties"
+export { default as template } from "./template.html"
+export { default as definition } from "./definition"
+export { default as controller } from "./controller"
+export { default as paint } from "./paint"
+export { default as resize } from "./resize"
