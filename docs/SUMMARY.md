@@ -8,6 +8,7 @@
   - [qExt Packages](introduction/qext-packages.md)
 - [Usage]()
   - [Quick Start](usage/quick-start.md)
+  - [Header Auth](usage/header-auth.md)
     <!-- - [Already existing extension](usage/existing-extension.md) -->
     <!-- - [Setup](usage/setup.md) -->
     <!-- - [Initializing using starter template](usage/initialize-starter-template.md) -->

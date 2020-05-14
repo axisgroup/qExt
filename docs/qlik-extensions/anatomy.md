@@ -1,8 +1,6 @@
 # Anatomy of a Qlik Sense Extension
 
-Qlik Sense extensions allow us to create our own visualization and functional objects within a Qlik Sense application. Extensions are typically used to extend the visualization capabilities of Qlik for users who are using Qlik applications in a self-service manner. More on qlik sense extension objects can be found [here](https://help.qlik.com/en-US/sense-developer/April2020/Content/Sense_Helpsites/extend-qlik-sense.htm)
-
-similar to any native chart you can create in a dashboard, extensions can be dragged onto a dashboard sheet and have properties defined to control the data and configuration settings of the extension
+Qlik Sense extensions allow us to create our own visualization and functional objects within a Qlik Sense application. Extensions are typically used to extend the visualization capabilities of Qlik for users who are using Qlik applications in a self-service manner. More on qlik sense extension objects can be found on Qlik's site [here](https://help.qlik.com/en-US/sense-developer/April2020/Content/Sense_Helpsites/extend-qlik-sense.htm)
 
 all extension files should be maintained in a single project folder, and at a minimum must include a [qext file](#qext-file) and a main [script file](#script-file)
 
@@ -53,3 +51,5 @@ define(["jquery"], function($) {
 when deploying an extension to a qlik server, the proper method is to compress the entire extension directory into a zip file, and then navigate to the extensions section of the qmc and import the zipped extension file. if there is already an extension deployed with the same name, it must first be deleted from the server using the delete button in the extensions section of the qmc
 
 on qlik sense desktop, the extension project simply needs to be placed at the folder location `C:\Users\[UserName]\Documents\Qlik\Sense\Extensions\`. any changes to the extension files will be reflected in the extension when the application page is reloaded
+
+check out the [next section](./why-qext.md) to see how qExt helps with setting up these projects and automating deployment
