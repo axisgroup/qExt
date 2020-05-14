@@ -8,14 +8,12 @@
   - [qExt Packages](introduction/qext-packages.md)
 - [Usage]()
   - [Quick Start](usage/quick-start.md)
-    <!-- - [Already existing extension](usage/existing-extension.md) -->
-    <!-- - [Setup](usage/setup.md) -->
-    <!-- - [Initializing using starter template](usage/initialize-starter-template.md) -->
+  - [Using with a pre-existing extension](usage/pre-existing-extension.md)
+  - [Server Deploy](usage/server-deploy.md)
+  - [Header Auth](usage/header-auth.md)
     <!-- - [Running in compile mode]() -->
     <!-- - [Disabling webpack comments]() -->
     <!-- - [Changing webpack config]() -->
-    <!-- - [Deploying to server with windows auth]() -->
-    <!-- - [Deploying to server with header auth]() -->
     <!-- - [Deploying to desktop]() -->
     <!-- - [Running with SASS]() -->
 - [Templates](templates/index.md)
