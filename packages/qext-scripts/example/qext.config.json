@@ -1,9 +1,8 @@
 {
-	"extension": "example",
+	"extension": "vanilla-test",
 	"output": "./dist",
-	"compile": {
-		"entry": "./src/index.js",
-		"qext": "./src/index.qext"
+	"vanilla": {
+		"entry": "./src"
 	},
 	"serverDeploy": {
 		"host": "172.16.84.100",
@@ -11,6 +10,6 @@
 		"isSecure": true,
 		"allowSelfSignedSignature": true,
 		"hdrAuthUser": "win-jt0r3uds9hc\\qexter",
-		"hdrAuthHeaderName": "hdr-user"
+		"hdrAuthHeaderName": "hdr-usr"
 	}
 }

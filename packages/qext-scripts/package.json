@@ -26,6 +26,7 @@
 		"@babel/preset-env": "^7.9.5",
 		"@hapi/joi": "^17.1.0",
 		"babel-loader": "^8.1.0",
+		"chokidar": "^3.4.0",
 		"copy-webpack-plugin": "^5.1.1",
 		"css-loader": "^3.5.3",
 		"dlv": "^1.1.3",
