@@ -31,6 +31,7 @@ var joi = require('@hapi/joi');
 var child_process = require('child_process');
 var prompt = _interopDefault(require('prompt'));
 var path = _interopDefault(require('path'));
+var chokidar = _interopDefault(require('chokidar'));
 var CopyWebpackPlugin = _interopDefault(require('copy-webpack-plugin'));
 var webpack = _interopDefault(require('webpack'));
 var zipdir = _interopDefault(require('zip-dir'));
@@ -168,29 +169,30 @@ var buildVanilla = ({ config, watch }) =>
 				: new Promise(resolve => resolve("no static directory"))
 		);
 
+		Promise.all([copySrcFiles, copyStaticFiles]).then(() => {
+			observer.next({ config, message: "vanilla built" });
+		});
+
 		if (watch) {
-			const copyFiles = () => {
+			const copyFiles = (evt, path) => {
 				const deleteOutput = fs__default.remove(dist);
 				const copySrcFiles = deleteOutput.then(() => fs__default.copy(entry, output));
 
-				const copyStaticFiles = copySrcFiles.then(() =>
+				const copyStaticFiles = copySrcFiles.then(() => {
 					staticEntry !== null
 						? fs__default.copy(staticEntry, `${output}/${config.vanilla.static}`)
-						: new Promise(resolve => resolve("no static directory"))
-				);
+						: new Promise(resolve => resolve("no static directory"));
+				});
 
 				copyStaticFiles.then(() => {
 					observer.next({ config, message: "vanilla built" });
 				});
 			};
 
-			fs__default.watch(entry, { recursive: true }, copyFiles);
-			if (staticEntry !== null) fs__default.watch(staticEntry, { recursive: true }, copyFiles);
+			chokidar.watch(entry, { ignoreInitial: true }).on("all", copyFiles);
+			if (staticEntry !== null) chokidar.watch(staticEntry, { ignoreInitial: true }).on("all", copyFiles);
 		} else {
-			copyStaticFiles.then(() => {
-				observer.next({ config, message: "vanilla built" });
-				observer.complete();
-			});
+			observer.complete();
 		}
 	}).pipe(
 		operators.tap(({ message }) => console.log(`${message}\n`)),

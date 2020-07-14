@@ -7,7 +7,7 @@
 		"git-pull-beta-release": "git checkout beta-release && git pull origin master && git push origin beta-release",
 		"git-pull-master": "git checkout master && git pull origin master",
 		"git-pull-all": "npm run git-pull-master && npm run git-pull-beta-release && npm run git-pull-develop",
-		"docs-build": "gitbook build ./docs ./docs/dist/qlik-hooks",
+		"docs-build": "gitbook build ./docs ./docs/dist/qext",
 		"docs-serve": "gitbook serve ./docs"
 	},
 	"keywords": [],

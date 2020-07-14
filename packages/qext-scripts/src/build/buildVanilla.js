@@ -2,6 +2,7 @@ import fs from "fs-extra"
 import path from "path"
 import { Observable } from "rxjs"
 import { tap, map } from "rxjs/operators"
+import chokidar from "chokidar"
 
 export default ({ config, watch }) =>
 	Observable.create(observer => {
@@ -17,29 +18,30 @@ export default ({ config, watch }) =>
 				: new Promise(resolve => resolve("no static directory"))
 		)
 
+		Promise.all([copySrcFiles, copyStaticFiles]).then(() => {
+			observer.next({ config, message: "vanilla built" })
+		})
+
 		if (watch) {
-			const copyFiles = () => {
+			const copyFiles = (evt, path) => {
 				const deleteOutput = fs.remove(dist)
 				const copySrcFiles = deleteOutput.then(() => fs.copy(entry, output))
 
-				const copyStaticFiles = copySrcFiles.then(() =>
+				const copyStaticFiles = copySrcFiles.then(() => {
 					staticEntry !== null
 						? fs.copy(staticEntry, `${output}/${config.vanilla.static}`)
 						: new Promise(resolve => resolve("no static directory"))
-				)
+				})
 
 				copyStaticFiles.then(() => {
 					observer.next({ config, message: "vanilla built" })
 				})
 			}
 
-			fs.watch(entry, { recursive: true }, copyFiles)
-			if (staticEntry !== null) fs.watch(staticEntry, { recursive: true }, copyFiles)
+			chokidar.watch(entry, { ignoreInitial: true }).on("all", copyFiles)
+			if (staticEntry !== null) chokidar.watch(staticEntry, { ignoreInitial: true }).on("all", copyFiles)
 		} else {
-			copyStaticFiles.then(() => {
-				observer.next({ config, message: "vanilla built" })
-				observer.complete()
-			})
+			observer.complete()
 		}
 	}).pipe(
 		tap(({ message }) => console.log(`${message}\n`)),
