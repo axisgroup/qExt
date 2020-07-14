@@ -66,4 +66,4 @@ the terminal window will prompt for your credentials. provide the credentials fo
 
 _the serverDeploy configuration may require other paramters based on server configuration. check [qExt config](../configuration/qext-config-json.md) for full configuration settings_
 
-alternatively, you can authenticate using header authentication. checkout the [using header auth](./usage/header-auth.md) section for more info
+alternatively, you can authenticate using header authentication. checkout the [using header auth](../usage/header-auth.md) section for more info
