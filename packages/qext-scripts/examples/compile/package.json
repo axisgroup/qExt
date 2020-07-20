@@ -1,8 +1,8 @@
 {
-	"name": "example",
-	"version": "1.0.0",
+	"name": "compile",
+	"sideEffects": false,
+	"version": "0.1.0",
 	"description": "",
-	"main": "index.js",
 	"scripts": {
 		"build": "qext-scripts",
 		"watch": "qext-scripts -w",
@@ -12,7 +12,11 @@
 	"keywords": [],
 	"author": "",
 	"license": "ISC",
-	"dependencies": {
+	"devDependencies": {
 		"qext-scripts": "file:../.."
+	},
+	"dependencies": {
+		"d3": "^5.16.0",
+		"rxjs": "^6.6.0"
 	}
 }

@@ -22,7 +22,6 @@
 	"dependencies": {
 		"@babel/core": "^7.9.0",
 		"@babel/plugin-proposal-object-rest-spread": "^7.9.5",
-		"@babel/plugin-transform-modules-commonjs": "^7.9.0",
 		"@babel/preset-env": "^7.9.5",
 		"@hapi/joi": "^17.1.0",
 		"babel-loader": "^8.1.0",
