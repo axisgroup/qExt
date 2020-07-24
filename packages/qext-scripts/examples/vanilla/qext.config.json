@@ -6,10 +6,10 @@
 	},
 	"serverDeploy": {
 		"host": "172.16.84.100",
-		"prefix": "hdr",
 		"isSecure": true,
 		"allowSelfSignedSignature": true,
-		"hdrAuthUser": "win-jt0r3uds9hc\\qexter",
-		"hdrAuthHeaderName": "hdr-usr"
+		"windowsAuth": true,
+		"user": "qexter",
+		"password": "P@ssword"
 	}
 }

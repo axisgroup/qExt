@@ -1,6 +1,5 @@
 {
 	"name": "compile",
-	"sideEffects": false,
 	"version": "0.1.0",
 	"description": "",
 	"scripts": {
@@ -13,10 +12,7 @@
 	"author": "",
 	"license": "ISC",
 	"devDependencies": {
+		"file-loader": "^6.0.0",
 		"qext-scripts": "file:../.."
-	},
-	"dependencies": {
-		"d3": "^5.16.0",
-		"rxjs": "^6.6.0"
 	}
 }

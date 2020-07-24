@@ -1,9 +1,10 @@
 {
-  "extension": "compile",
-  "output": "./dist",
-  "compile": {
-    "entry": "./src/index.js",
-    "qext": "./src/index.qext",
-    "static": "./static"
-  }
+	"extension": "compile",
+	"output": "./dist",
+	"compile": {
+		"entry": "./src/index.js",
+		"qext": "./src/index.qext",
+		"static": "./static",
+		"altWebpackConfig": "./webpack.config.js"
+	}
 }
