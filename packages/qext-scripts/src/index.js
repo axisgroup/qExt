@@ -15,10 +15,11 @@ import program from "commander"
 program
 	.option("-w, --watch", "Watch")
 	.option("-d, --deploy", "Deploy")
+	.option("-c, --config <config>", "Config File")
 	.parse(process.argv)
 
 /* Get Config */
-const configFile = "./qext.config.json"
+const configFile = program.config || "./qext.config.json"
 
 /** Validate Qext Config File */
 const validateQextConfig$ = validateQextConfig(configFile).pipe(share(1))

@@ -41,7 +41,7 @@ var program = _interopDefault(require('commander'));
 
 var validateQextConfig = configFile =>
 	rxjs.Observable.create(observer => {
-		if (configFile !== "./qext.config.json") observer.error("config should come from ./qext.config.json");
+		// if (configFile !== "./qext.config.json") observer.error("config should come from ./qext.config.json")
 
 		const configFileStat = fs.stat(configFile);
 
@@ -425,10 +425,11 @@ var deployToDesktop = config =>
 program
 	.option("-w, --watch", "Watch")
 	.option("-d, --deploy", "Deploy")
+	.option("-c, --config <config>", "Config File")
 	.parse(process.argv);
 
 /* Get Config */
-const configFile = "./qext.config.json";
+const configFile = program.config || "./qext.config.json";
 
 /** Validate Qext Config File */
 const validateQextConfig$ = validateQextConfig(configFile).pipe(operators.share(1));
