@@ -1,12 +1,12 @@
 {
 	"name": "qext",
-	"version": "2.0.2",
+	"version": "2.2.0",
 	"description": "",
 	"main": "index.js",
 	"bin": {
 		"qext": "./bin/qext.js"
 	},
-	"qextScriptsVersion": "2.0.0",
+	"qextScriptsVersion": "2.2.0",
 	"scripts": {
 		"build": "rollup -c",
 		"watch": "rollup -c -w",

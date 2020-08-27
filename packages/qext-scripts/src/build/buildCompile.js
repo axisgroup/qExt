@@ -37,7 +37,7 @@ export default ({ config, watch }) =>
 								loader: "babel-loader",
 								options: {
 									presets: ["@babel/preset-env"],
-									plugins: ["@babel/plugin-proposal-object-rest-spread", "@babel/plugin-transform-modules-commonjs"],
+									plugins: ["@babel/plugin-proposal-object-rest-spread"],
 								},
 							},
 							{ test: /\.html$/, loader: "html-loader" },

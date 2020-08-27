@@ -18,11 +18,12 @@ module.exports = function({ entry, output, extension, qext, static }) {
 					loader: "babel-loader",
 					options: {
 						presets: ["@babel/preset-env"],
-						plugins: ["@babel/plugin-proposal-object-rest-spread", "@babel/plugin-transform-modules-commonjs"],
+						plugins: ["@babel/plugin-proposal-object-rest-spread"],
 					},
 				},
 				{ test: /\.html$/, loader: "html-loader" },
 				{ test: /\.css$/, use: [{ loader: "style-loader" }, { loader: "css-loader" }] },
+				{ test: /\.(woff|woff2|eot|ttf|otf)$/, use: ["file-loader"] },
 			],
 		},
 		plugins: [

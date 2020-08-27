@@ -1,8 +1,7 @@
 {
-	"name": "vanilla-test",
-	"version": "1.0.0",
+	"name": "compile",
+	"version": "0.1.0",
 	"description": "",
-	"main": "index.js",
 	"scripts": {
 		"build": "qext-scripts",
 		"watch": "qext-scripts -w",
@@ -12,7 +11,8 @@
 	"keywords": [],
 	"author": "",
 	"license": "ISC",
-	"dependencies": {
+	"devDependencies": {
+		"file-loader": "^6.0.0",
 		"qext-scripts": "file:../.."
 	}
 }

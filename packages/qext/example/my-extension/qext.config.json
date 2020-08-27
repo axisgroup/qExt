@@ -1,8 +1,0 @@
-{
-  "extension": "my-extension",
-  "output": "./dist",
-  "vanilla": {
-    "entry": "./src",
-    "static": "./static"
-  }
-}

@@ -3,3 +3,6 @@ dist/
 test-extension/
 *.tgz
 _book/
+packages/qext-scripts/test/authenticate/authentication/qext.config.json
+packages/qext-scripts/test/authenticate/wrong-password/qext.config.json
+packages/qext-scripts/test/deploy/deploy-to-server-windows-auth/qext.config.json

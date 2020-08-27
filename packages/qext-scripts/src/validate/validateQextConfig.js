@@ -4,7 +4,7 @@ import { stat, readJSON } from "fs-extra"
 
 export default configFile =>
 	Observable.create(observer => {
-		if (configFile !== "./qext.config.json") observer.error("config should come from ./qext.config.json")
+		// if (configFile !== "./qext.config.json") observer.error("config should come from ./qext.config.json")
 
 		const configFileStat = stat(configFile)
 
