@@ -18,7 +18,7 @@ export default config => {
 			exec(
 				`curl -s -L --ntlm -u ${user}:${password} --insecure -c - ${serverDeploy.isSecure ? "https" : "http"}://${
 					serverDeploy.host
-				}/qrs/about?xrfkey=0123456789abcdef --header "x-qlik-xrfkey: 0123456789abcdef" --header "User-Agent: Windows"`,
+				}${serverDeploy.prefix ? "/" : ""}${serverDeploy.prefix}/qrs/about?xrfkey=0123456789abcdef --header "x-qlik-xrfkey: 0123456789abcdef" --header "User-Agent: Windows"`,
 				/** Callback */
 				(error, stdout, stderr) => {
 					/** Error */
